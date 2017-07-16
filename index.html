@@ -7,21 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="normalize.css">
     <link rel="stylesheet" type="text/css" href="todo.css">
-    <script src="todo/index.js"></script>
-    <script src="todo/f.js"></script>
+    <script src="dist/bundle.js"></script>
 
 </head>
 
 <body>
     <div class="cntr">
         <div id="add-todo">
-            <form id="add-todo-form">
-                <input id="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
-                <input id="button" type="submit" value="+">
+            <form class="add-todo">
+                <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
+                <input class="button" type="submit" value="+">
             </form>
         </div>
-        <ul id="note-menu" class="note-menu"></ul>
-        <div id="remove-List" class="remove-List">Remove All</div>
+        <ul class="todo-list"></ul>
+        <div class="remove-List">Remove All</div>
     </div>
 </body>
 
