@@ -1,20 +1,51 @@
-/* class ToDoList {
+
+// import { ToDoListItem } from './todolistitem.js';
+
+const ToDoListItem = require('./todolistitem.js').default;
+
+export default class ToDoList {
 
 
-  constructor(input, parents, buttons) {
-    //  this.input = input;
-    //  this.parent = parents;
-    //   this.button = buttons;
-    // this.tasks = [];
-    // this.makeItem();
+  constructor(inputTest, btn, todoList, todoForm, removeList, itemsStorage) {
+    this.todoList = todoList;
+    this.todoForm = todoForm;
+    this.removeList = removeList;
+    this.itemsStorage = itemsStorage;
+    this.btn = btn;
+    this.inputTest = inputTest;
+
+    /*  this.itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
+        {
+          title: 'Duplicate door key',
+          done: false,
+        },
+        {
+          title: 'Boom Shka lak',
+          done: true,
+        },
+      ]; */
+    this.init();
   }
 
+  init() {
+    this.handler();
+  }
 
-  // при клике на кнопку, в массив добавляются новые классы, счетчик увеличивается
-          this.button.addEventListener("click", () => {
-  this.tasks.push(new ToDoListItem(this.input.value, this.parent, deleteEvent, counter, changeEvent));
-  counter++;
-  console.log(this.tasks);
-  this.cleanValue();
-});
-} */
+  handler() {
+    this.btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      new ToDoListItem(this.btn, this.inputTest, this.todoList, this.todoForm, this.removeList, this.itemsStorage);
+    });
+  }
+  /*  const myEvent = new CustomEvent('deleteEvent', {
+   detail: {
+     deleted: 'yep',
+     },
+ }); */
+
+  /*   this.todoList.addEventListener('deleteEvent', (e) => {
+       console.log('Event is: ', e.detail);
+     }); */
+
+
+}

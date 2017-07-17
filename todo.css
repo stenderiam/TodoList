@@ -27,6 +27,9 @@ input.one-list-item {
     background: darkseagreen;
 }
 
+.hidden{
+    display: none;
+}
  /*#todo {
     position: relative;
     min-width: 330px;
