@@ -1,7 +1,7 @@
 
-// import { ToDoList } from './todolistitem.js';
+import ToDoList from './todolist.js';
 
-const ToDoList = require('./todolist.js').default;
+// const ToDoList = require('./todolist.js').default;
 
 function ready(fn) {
   if (document.readyState !== 'loading') {

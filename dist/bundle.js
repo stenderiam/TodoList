@@ -1,9 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-// import { ToDoList } from './todolistitem.js';
+var _todolist = require('./todolist.js');
 
-var ToDoList = require('./todolist.js').default;
+var _todolist2 = _interopRequireDefault(_todolist);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+// const ToDoList = require('./todolist.js').default;
 
 function ready(fn) {
   if (document.readyState !== 'loading') {
@@ -30,7 +36,7 @@ var init = function init() {
   var inputTest = document.querySelector('.myinput');
   var btn = document.querySelector('.button');
 
-  new ToDoList(inputTest, btn);
+  new _todolist2.default(inputTest, btn);
 };
 ready(init);
 
@@ -51,15 +57,21 @@ var _createClass = function () {
   };
 }();
 
+var _todolistitem = require('./todolistitem.js');
+
+var _todolistitem2 = _interopRequireDefault(_todolistitem);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 }
 
-// import { ToDoListItem } from "./todolistitem.js";
-
-var ToDoListItem = require('./todolistitem.js').default;
+// const ToDoListItem = require('./todolistitem.js').default;
 
 var ToDoList = function () {
   function ToDoList(inputTest, btn) {
@@ -74,6 +86,7 @@ var ToDoList = function () {
     this.todoForm = document.querySelector('.add-todo');
     this.removeList = document.querySelector('.remove-List');
     this.todoList = document.querySelector('.todo-list');
+    // this.del = document.getElementById('delete');
     this.itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [{
       title: 'Duplicate door key',
       done: false
@@ -88,26 +101,37 @@ var ToDoList = function () {
     key: 'init',
     value: function init() {
       this.handler();
-      this.showList();
+      //  this.customHangler();
+      //  this.showList();
     }
-  }, {
-    key: 'showList',
-    value: function showList() {
+
+    /* showList() {
       // storage.setItem(keyName, keyValue);
       localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
       this.createList(this.itemsStorage, this.todoList);
       // this.showRemoveButton();
-    }
-  }, {
-    key: 'createList',
-    value: function createList() {
-      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var listTarget = arguments[1];
+      console.log(this.itemsStorage);
+    } */
 
-      listTarget.innerHTML = list.map(function (item, i) {
-        return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">\n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
-      }).join('');
-    }
+    /* createList(list = [], listTarget) {
+       listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
+                     <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
+                     <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
+                     <span id="delete" class="delete" data-index="${i}">X</span>
+              </li>`).join('');
+     } */
+
+    /* customHangler() {
+       this.showList = new CustomEvent('showList', {
+         detail: {
+           count: 'done',
+         },
+       });
+         this.input.parentNode.addEventListener('showList', (event) => {
+         this.createList(this.itemsStorage, this.todoList);
+       });
+     } */
+
   }, {
     key: 'handler',
     value: function handler() {
@@ -115,19 +139,9 @@ var ToDoList = function () {
 
       this.btn.addEventListener('click', function (e) {
         e.preventDefault();
-        new ToDoListItem(_this.btn, _this.inputTest, _this.todoList, _this.todoForm, _this.removeList, _this.itemsStorage, _this.createList);
+        new _todolistitem2.default(_this.btn, _this.inputTest, _this.todoList, _this.todoForm, _this.removeList, _this.itemsStorage, _this.showList);
       });
     }
-    /*  const myEvent = new CustomEvent('deleteEvent', {
-     detail: {
-       deleted: 'yep',
-       },
-    }); */
-
-    /*   this.todoList.addEventListener('deleteEvent', (e) => {
-         console.log('Event is: ', e.detail);
-       }); */
-
   }]);
 
   return ToDoList;
@@ -159,29 +173,25 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var ToDoListItem = function () {
-  function ToDoListItem(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, createListPush) {
+  function ToDoListItem(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, showList) {
     _classCallCheck(this, ToDoListItem);
 
     this.btn = btnPush;
+    this.showListEvent = showList;
     this.input = inputPush;
     this.todoList = todoListPush;
     this.todoForm = todoFormPush;
     this.removeList = removeListPush;
     this.itemsStorage = itemsStoragePush;
-    this.del = document.getElementById('delete');
-    this.createList = createListPush;
-    this.init();
+    //  this.del = document.getElementById('delete');
+    // this.createList(this.itemsStorage, this.todoList);
+    this.addTodoItem();
+    this.toggleDone();
+    this.removeTodoItem();
+    this.removeEvent();
   }
 
   _createClass(ToDoListItem, [{
-    key: 'init',
-    value: function init() {
-      this.addTodoItem();
-      this.toggleDone();
-      this.removeTodoItem();
-      this.removeEvent();
-    }
-  }, {
     key: 'addTodoItem',
     value: function addTodoItem() {
       if (this.input.value.length === 0) return;
@@ -201,15 +211,16 @@ var ToDoListItem = function () {
       this.createList(this.itemsStorage, this.todoList);
       // this.showRemoveButton();
     }
+  }, {
+    key: 'createList',
+    value: function createList() {
+      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var listTarget = arguments[1];
 
-    /* createList(list = [], listTarget) {
-      listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
-                    <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
-                    <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
-                    <span id="delete" class="delete" data-index="${i}">X</span>
-             </li>`).join('');
-    } */
-
+      listTarget.innerHTML = list.map(function (item, i) {
+        return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">\n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
+      }).join('');
+    }
   }, {
     key: 'toggleDone',
     value: function toggleDone() {
@@ -228,6 +239,7 @@ var ToDoListItem = function () {
     value: function removeTodoItem() {
       var _this2 = this;
 
+      // console.log('aaa');
       this.todoList.addEventListener('click', function (e) {
         if (!e.target.matches('.delete')) return;
         var el = e.target;
@@ -235,6 +247,7 @@ var ToDoListItem = function () {
         // array.splice(start, deleteCount)
         _this2.itemsStorage.splice(index, 1);
         // check an array
+
         console.log(_this2.itemsStorage);
         _this2.saveTodoItem();
       });

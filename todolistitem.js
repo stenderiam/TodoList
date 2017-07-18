@@ -1,18 +1,15 @@
 export default class ToDoListItem {
 
-  constructor(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, createListPush) {
+  constructor(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, showList) {
     this.btn = btnPush;
+    this.showListEvent = showList;
     this.input = inputPush;
     this.todoList = todoListPush;
     this.todoForm = todoFormPush;
     this.removeList = removeListPush;
     this.itemsStorage = itemsStoragePush;
-    this.del = document.getElementById('delete');
-    this.createList = createListPush;
-    this.init();
-  }
-
-  init() {
+    //  this.del = document.getElementById('delete');
+    // this.createList(this.itemsStorage, this.todoList);
     this.addTodoItem();
     this.toggleDone();
     this.removeTodoItem();
@@ -30,7 +27,6 @@ export default class ToDoListItem {
     this.saveTodoItem();
   }
 
-
   saveTodoItem() {
     // storage.setItem(keyName, keyValue);
     localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
@@ -38,13 +34,13 @@ export default class ToDoListItem {
     // this.showRemoveButton();
   }
 
-  /* createList(list = [], listTarget) {
+  createList(list = [], listTarget) {
     listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
                   <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
                   <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
                   <span id="delete" class="delete" data-index="${i}">X</span>
            </li>`).join('');
-  } */
+  }
 
   toggleDone() {
     this.todoList.addEventListener('click', (e) => {
@@ -57,6 +53,7 @@ export default class ToDoListItem {
   }
 
   removeTodoItem() {
+    // console.log('aaa');
     this.todoList.addEventListener('click', (e) => {
       if (!e.target.matches('.delete')) return;
       const el = e.target;
@@ -64,6 +61,7 @@ export default class ToDoListItem {
       // array.splice(start, deleteCount)
       this.itemsStorage.splice(index, 1);
       // check an array
+
       console.log(this.itemsStorage);
       this.saveTodoItem();
     });
