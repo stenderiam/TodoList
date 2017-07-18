@@ -4,9 +4,7 @@
         "airbnb"
     ],
     "plugins": [
-        "babel",
-        "react",
-        "promise"
+        "babel"
     ],
     "env": {
         "browser": true
@@ -36,8 +34,7 @@
             1,
             {
                 "extensions": [
-                    ".js",
-                    ".jsx"
+                    ".js"
                 ]
             }
         ],

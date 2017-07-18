@@ -1,5 +1,5 @@
 
-// import ToDoList from '/home/ilais/todo/todolist.js';
+// import { ToDoList } from './todolistitem.js';
 
 const ToDoList = require('./todolist.js').default;
 
@@ -31,7 +31,5 @@ const init = function () {
 
 
   new ToDoList(inputTest, btn, todoList, todoForm, removeList, itemsStorage);
-
-  // const todoOne = new ToDoList(btn, input);
 };
 ready(init);
