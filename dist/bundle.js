@@ -115,7 +115,7 @@ var ToDoList = function () {
 
       this.btn.addEventListener('click', function (e) {
         e.preventDefault();
-        new ToDoListItem(_this.btn, _this.inputTest, _this.todoList, _this.todoForm, _this.removeList, _this.itemsStorage);
+        new ToDoListItem(_this.btn, _this.inputTest, _this.todoList, _this.todoForm, _this.removeList, _this.itemsStorage, _this.createList);
       });
     }
     /*  const myEvent = new CustomEvent('deleteEvent', {
@@ -159,7 +159,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var ToDoListItem = function () {
-  function ToDoListItem(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush) {
+  function ToDoListItem(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, createListPush) {
     _classCallCheck(this, ToDoListItem);
 
     this.btn = btnPush;
@@ -169,6 +169,7 @@ var ToDoListItem = function () {
     this.removeList = removeListPush;
     this.itemsStorage = itemsStoragePush;
     this.del = document.getElementById('delete');
+    this.createList = createListPush;
     this.init();
   }
 
@@ -200,16 +201,15 @@ var ToDoListItem = function () {
       this.createList(this.itemsStorage, this.todoList);
       // this.showRemoveButton();
     }
-  }, {
-    key: 'createList',
-    value: function createList() {
-      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var listTarget = arguments[1];
 
-      listTarget.innerHTML = list.map(function (item, i) {
-        return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">\n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
-      }).join('');
-    }
+    /* createList(list = [], listTarget) {
+      listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
+                    <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
+                    <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
+                    <span id="delete" class="delete" data-index="${i}">X</span>
+             </li>`).join('');
+    } */
+
   }, {
     key: 'toggleDone',
     value: function toggleDone() {

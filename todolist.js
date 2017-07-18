@@ -51,7 +51,7 @@ export default class ToDoList {
   handler() {
     this.btn.addEventListener('click', (e) => {
       e.preventDefault();
-      new ToDoListItem(this.btn, this.inputTest, this.todoList, this.todoForm, this.removeList, this.itemsStorage);
+      new ToDoListItem(this.btn, this.inputTest, this.todoList, this.todoForm, this.removeList, this.itemsStorage, this.createList);
     });
   }
   /*  const myEvent = new CustomEvent('deleteEvent', {

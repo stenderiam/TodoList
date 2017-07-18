@@ -1,6 +1,6 @@
 export default class ToDoListItem {
 
-  constructor(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush) {
+  constructor(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, createListPush) {
     this.btn = btnPush;
     this.input = inputPush;
     this.todoList = todoListPush;
@@ -8,6 +8,7 @@ export default class ToDoListItem {
     this.removeList = removeListPush;
     this.itemsStorage = itemsStoragePush;
     this.del = document.getElementById('delete');
+    this.createList = createListPush;
     this.init();
   }
 
@@ -37,13 +38,13 @@ export default class ToDoListItem {
     // this.showRemoveButton();
   }
 
-  createList(list = [], listTarget) {
+  /* createList(list = [], listTarget) {
     listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
                   <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
                   <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
                   <span id="delete" class="delete" data-index="${i}">X</span>
            </li>`).join('');
-  }
+  } */
 
   toggleDone() {
     this.todoList.addEventListener('click', (e) => {
