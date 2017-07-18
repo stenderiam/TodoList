@@ -14,23 +14,23 @@ function ready(fn) {
 }
 
 var init = function init() {
-  var todoList = document.querySelector('.todo-list');
-  var todoForm = document.querySelector('.add-todo');
-  var removeList = document.querySelector('.remove-List');
-  var itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [{
-    title: 'Duplicate door key',
-    done: false
-  }, {
-    title: 'Boom Shka lak',
-    done: true
-  }];
+  // const todoList = document.querySelector('.todo-list');
+
+  /* const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
+    {
+      title: 'Duplicate door key',
+      done: false,
+    },
+    {
+      title: 'Boom Shka lak',
+      done: true,
+    },
+  ]; */
 
   var inputTest = document.querySelector('.myinput');
   var btn = document.querySelector('.button');
 
-  new ToDoList(inputTest, btn, todoList, todoForm, removeList, itemsStorage);
-
-  // const todoOne = new ToDoList(btn, input);
+  new ToDoList(inputTest, btn);
 };
 ready(init);
 
@@ -57,32 +57,30 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 
-// import { ToDoListItem } from './todolistitem.js';
 // import { ToDoListItem } from "./todolistitem.js";
 
 var ToDoListItem = require('./todolistitem.js').default;
 
 var ToDoList = function () {
-  function ToDoList(inputTest, btn, todoList, todoForm, removeList, itemsStorage) {
+  function ToDoList(inputTest, btn) {
     _classCallCheck(this, ToDoList);
 
-    this.todoList = todoList;
-    this.todoForm = todoForm;
-    this.removeList = removeList;
-    this.itemsStorage = itemsStorage;
+    //  this.todoList = todoList;
+    //  this.todoForm = todoForm;
+    // this.removeList = removeList;
+    // this.itemsStorage = itemsStorage;
     this.btn = btn;
     this.inputTest = inputTest;
-
-    /*  this.itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
-        {
-          title: 'Duplicate door key',
-          done: false,
-        },
-        {
-          title: 'Boom Shka lak',
-          done: true,
-        },
-      ]; */
+    this.todoForm = document.querySelector('.add-todo');
+    this.removeList = document.querySelector('.remove-List');
+    this.todoList = document.querySelector('.todo-list');
+    this.itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [{
+      title: 'Duplicate door key',
+      done: false
+    }, {
+      title: 'Boom Shka lak',
+      done: true
+    }];
     this.init();
   }
 
@@ -90,6 +88,25 @@ var ToDoList = function () {
     key: 'init',
     value: function init() {
       this.handler();
+      this.showList();
+    }
+  }, {
+    key: 'showList',
+    value: function showList() {
+      // storage.setItem(keyName, keyValue);
+      localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
+      this.createList(this.itemsStorage, this.todoList);
+      // this.showRemoveButton();
+    }
+  }, {
+    key: 'createList',
+    value: function createList() {
+      var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var listTarget = arguments[1];
+
+      listTarget.innerHTML = list.map(function (item, i) {
+        return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">\n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
+      }).join('');
     }
   }, {
     key: 'handler',
@@ -145,26 +162,13 @@ var ToDoListItem = function () {
   function ToDoListItem(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush) {
     _classCallCheck(this, ToDoListItem);
 
-    /* constructor(btn, input, todoList, todoForm, removeList, itemsStorage) {
-       this.todoList = todoList;
-       this.todoForm = todoForm;
-       this.removeList = removeList;
-       this.itemsStorage = itemsStorage; */
-    // this.deleteEvent = deleteEvent;
     this.btn = btnPush;
     this.input = inputPush;
     this.todoList = todoListPush;
     this.todoForm = todoFormPush;
     this.removeList = removeListPush;
     this.itemsStorage = itemsStoragePush;
-    //  this.myEvent = eventMy;
-
-    //   this.itemsStorage = itemsStoragePush;
-    /*  this.todoList = document.querySelector('.todo-list');
-      this.todoForm = document.querySelector('.add-todo');
-      this.removeList = document.querySelector('.remove-List'); */
     this.del = document.getElementById('delete');
-    //  this.createList(this.itemsStorage, this.todoList);
     this.init();
   }
 

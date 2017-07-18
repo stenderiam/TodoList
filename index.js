@@ -12,10 +12,9 @@ function ready(fn) {
 }
 
 const init = function () {
-  const todoList = document.querySelector('.todo-list');
-  const todoForm = document.querySelector('.add-todo');
-  const removeList = document.querySelector('.remove-List');
-  const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
+  // const todoList = document.querySelector('.todo-list');
+
+  /* const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
     {
       title: 'Duplicate door key',
       done: false,
@@ -24,12 +23,11 @@ const init = function () {
       title: 'Boom Shka lak',
       done: true,
     },
-  ];
+  ]; */
 
   const inputTest = document.querySelector('.myinput');
   const btn = document.querySelector('.button');
 
-
-  new ToDoList(inputTest, btn, todoList, todoForm, removeList, itemsStorage);
+  new ToDoList(inputTest, btn);
 };
 ready(init);
