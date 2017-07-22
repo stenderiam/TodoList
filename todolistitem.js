@@ -1,7 +1,8 @@
 export default class todoItem {
 
-  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList) {
+  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList, elem) {
     this.button = buttonPush;
+    this.elem = elem;
     this.inputPush = inputPush;
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
@@ -14,31 +15,37 @@ export default class todoItem {
     this.saveItemEvent = new CustomEvent('saveItem', {
       detail: { id: this.id },
     });
-    this.addTodoItem();
+    //   this.addTodoItem();
+    this.saveTodoItem();
     this.createEntry();
     this.removeTodoItem();
   }
   // создание одной записи в лист
   createEntry() {
-    this.todoList.innerHTML = this.itemsStorage.map((item, i) => `<li class="list-content">
-                  <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">            
-                  <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
-                  <span id="delete" class="delete" data-index="${i}">X</span>
-           </li>`).join('');
+    const elemCreate = this.elem;
+    const elemLi = document.createElement('li');
+    elemLi.className = 'list-content';
+    this.todoList.appendChild(elemLi);
+    const elemHtml = `<input class="one-list-item" type="text" for="todo${this.id}" value="${elemCreate.title}">            
+                  <input type="checkbox" class="checkDone" id="todo${this.id}" data-index="${this.id}" ${elemCreate.done ? 'checked' : ''} />
+                  <span id="delete" class="delete" data-index="${this.id}">X</span>`;
+    elemLi.innerHTML = elemHtml;
   }
+
   // добавление одной записи в лист
-  addTodoItem() {
-    if (this.inputPush.value.length === 0) return;
-    const title = this.inputPush.value;
-    const todo = {
-      title,
-      done: false,
-      id: this.id,
-    };
-    this.itemsStorage.push(todo);
-    console.log(this.itemsStorage);
-    this.saveTodoItem();
-  }
+  /* addTodoItem() {
+     if (this.inputPush.value.length === 0) return;
+     const title = this.inputPush.value;
+     const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => { return elem.id; }));
+     const todo = {
+       title,
+       done: false,
+       id: maxId,
+     };
+     this.itemsStorage.push(todo);
+     console.log(this.itemsStorage);
+ 
+   } */
   // сохранение одной записи в лист
   saveTodoItem() {
     this.button.addEventListener('click', () => {

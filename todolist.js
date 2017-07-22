@@ -31,30 +31,45 @@ export default class ToDoList {
   createTodoItem() {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
-      new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList);
+      if (this.inputID.value.length === 0) return;
+      const title = this.inputID.value;
+      const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => { return elem.id; }))
+      const todo = {
+        title,
+        done: false,
+        id: maxId + 1,
+      };
+      this.itemsStorage.push(todo);
+      new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, todo);
       //  console.log(this.inputID);
     });
   }
   // показать при старте все записи листа
   showCurrentList() {
-    this.itemsStorage.forEach(() => {
-      this.itemsArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList));
+    this.itemsStorage.forEach((elem) => {
+      this.itemsArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList, elem));
     });
   }
+  // удалить одну запись
   deleteEventListen() {
     document.addEventListener('deleteItem', (e) => {
       const el = e.target;
       const elemWithId = this.itemsStorage.findIndex(elem => elem.id === el);
       console.log(elemWithId);
       this.itemsStorage.splice(elemWithId, 1);
-      this.saveItemEventListen();
+      this.saveItem();
     });
   }
 
+  // сохранить в localStorage
   saveItemEventListen() {
     document.addEventListener('saveItem', (e) => {
-      localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
+      this.saveItem();
     });
+  }
+
+  saveItem() {
+    localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
   }
 
   clearList() {

@@ -100,7 +100,18 @@ var ToDoList = function () {
 
       this.buttonID.addEventListener('click', function (e) {
         e.preventDefault();
-        new _todolistitem2.default(_this.inputID, _this.buttonID, _this.todoList, _this.itemsStorage, _this.id++, _this.removeList);
+        if (_this.inputID.value.length === 0) return;
+        var title = _this.inputID.value;
+        var maxId = Math.max.apply(Math, _this.itemsStorage.map(function (elem) {
+          return elem.id;
+        }));
+        var todo = {
+          title: title,
+          done: false,
+          id: maxId + 1
+        };
+        _this.itemsStorage.push(todo);
+        new _todolistitem2.default(_this.inputID, _this.buttonID, _this.todoList, _this.itemsStorage, _this.removeList, todo);
         //  console.log(this.inputID);
       });
     }
@@ -111,10 +122,12 @@ var ToDoList = function () {
     value: function showCurrentList() {
       var _this2 = this;
 
-      this.itemsStorage.forEach(function () {
-        _this2.itemsArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.id++, _this2.removeList));
+      this.itemsStorage.forEach(function (elem) {
+        _this2.itemsArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.id++, _this2.removeList, elem));
       });
     }
+    // удалить одну запись
+
   }, {
     key: 'deleteEventListen',
     value: function deleteEventListen() {
@@ -127,17 +140,25 @@ var ToDoList = function () {
         });
         console.log(elemWithId);
         _this3.itemsStorage.splice(elemWithId, 1);
-        _this3.saveItemEventListen();
+        _this3.saveItem();
       });
     }
+
+    // сохранить в localStorage
+
   }, {
     key: 'saveItemEventListen',
     value: function saveItemEventListen() {
       var _this4 = this;
 
       document.addEventListener('saveItem', function (e) {
-        localStorage.setItem('todo-list', JSON.stringify(_this4.itemsStorage));
+        _this4.saveItem();
       });
+    }
+  }, {
+    key: 'saveItem',
+    value: function saveItem() {
+      localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
     }
   }, {
     key: 'clearList',
@@ -190,10 +211,11 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var todoItem = function () {
-  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList) {
+  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList, elem) {
     _classCallCheck(this, todoItem);
 
     this.button = buttonPush;
+    this.elem = elem;
     this.inputPush = inputPush;
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
@@ -206,7 +228,8 @@ var todoItem = function () {
     this.saveItemEvent = new CustomEvent('saveItem', {
       detail: { id: this.id }
     });
-    this.addTodoItem();
+    //   this.addTodoItem();
+    this.saveTodoItem();
     this.createEntry();
     this.removeTodoItem();
   }
@@ -216,26 +239,27 @@ var todoItem = function () {
   _createClass(todoItem, [{
     key: 'createEntry',
     value: function createEntry() {
-      this.todoList.innerHTML = this.itemsStorage.map(function (item, i) {
-        return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">            \n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
-      }).join('');
+      var elemCreate = this.elem;
+      var elemLi = document.createElement('li');
+      elemLi.className = 'list-content';
+      this.todoList.appendChild(elemLi);
+      var elemHtml = '<input class="one-list-item" type="text" for="todo' + this.id + '" value="' + elemCreate.title + '">            \n                  <input type="checkbox" class="checkDone" id="todo' + this.id + '" data-index="' + this.id + '" ' + (elemCreate.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + this.id + '">X</span>';
+      elemLi.innerHTML = elemHtml;
     }
-    // добавление одной записи в лист
 
-  }, {
-    key: 'addTodoItem',
-    value: function addTodoItem() {
-      if (this.inputPush.value.length === 0) return;
-      var title = this.inputPush.value;
-      var todo = {
-        title: title,
-        done: false,
-        id: this.id
-      };
-      this.itemsStorage.push(todo);
-      console.log(this.itemsStorage);
-      this.saveTodoItem();
-    }
+    // добавление одной записи в лист
+    /* addTodoItem() {
+       if (this.inputPush.value.length === 0) return;
+       const title = this.inputPush.value;
+       const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => { return elem.id; }));
+       const todo = {
+         title,
+         done: false,
+         id: maxId,
+       };
+       this.itemsStorage.push(todo);
+       console.log(this.itemsStorage);
+       } */
     // сохранение одной записи в лист
 
   }, {
