@@ -7,7 +7,7 @@ export default class todoItem {
     this.itemsStorage = itemsStoragePush;
     this.removeList = removeListPush;
     this.id = idPush;
-    this.deleteItemPush = deleteItemPush;
+    this.deleteItem = deleteItemPush;
     this.remove;
     this.createEntry();
     this.addTodoItem();
@@ -67,16 +67,12 @@ export default class todoItem {
 
   removeTodoItem() {
     this.todoList.addEventListener('click', (e) => {
-      if (!e.target.matches('.delete')) return;
-      const el = e.target;
-      const index = el.dataset.index;
-      this.itemsStorage.splice(index, 1);
-      this.saveTodoItem();
+      /*  if (!e.target.matches('.delete')) return;
+        const el = e.target;
+        const index = el.dataset.index;
+        this.itemsStorage.splice(index, 1);
+        this.saveTodoItem();*/
     });
-    if (this.itemsStorage.length === 0) {
-      this.removeData();
-      this.removeList.classList.add('hidden');
-    }
   }
 
   /* removeTodoItem() {
@@ -98,14 +94,6 @@ export default class todoItem {
     });
   }
 
-  /*  removeTask() {
-      this.remove.addEventListener("click", () => {
-        this.deleteEvent.detail.number = this.counter;
-        this.parent.parentNode.dispatchEvent(this.deleteEvent);
-        this.mainContainer.remove();
-        this.parent.parentNode.dispatchEvent(this.watch);
-      });
-    } */
   // найти по айди, получить объект, поменять false на true 
 }
 

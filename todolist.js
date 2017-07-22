@@ -24,7 +24,8 @@ export default class ToDoList {
   init() {
     this.showCurrentList();
     this.createTodoItem();
-    //  this.customDeleteEvent();
+
+    this.deleteEventListen()
   }
 
   // создать новую запись по клику на кнопку
@@ -43,11 +44,22 @@ export default class ToDoList {
     });
   }
 
-  /* customDeleteEvent() {
-      this.deleteItem = new CustomEvent('deleteItem', {
-        detail: { id: 'id' },
-      });
-    } */
+  customDeleteEvent() {
+    this.deleteItem = new CustomEvent('deleteItem', {
+      detail: { id: 'id' },
+    });
+  }
+
+  deleteEventListen() {
+    this.deleteItem.addEventListener('deleteItem', () => {
+      //    this.customDeleteEvent();
+      //     console.log('done');
+      const el = e.target;
+      this.itemsStorage.splice(index, 1);
+    });
+  }
+
+
 
 
 }
