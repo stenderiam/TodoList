@@ -1,3 +1,5 @@
+
+/*
 const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
   {
     title: 'Duplicate door key',
@@ -14,3 +16,4 @@ const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
 
 export default itemsStorage;
 
+*/

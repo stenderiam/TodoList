@@ -1,10 +1,10 @@
 
 import todoItem from "./todolistitem.js";
-import itemsStorage from "./localStorage.js";
+// import itemsStorage from "./localStorage.js";
 
 export default class ToDoList {
 
-  constructor(layout) {
+  constructor(layout, itemsStorage) {
     // создание контейнера для todo list
     this.layout = document.querySelector('.cntr');
     this.layout.insertAdjacentHTML('beforeend', layout);
