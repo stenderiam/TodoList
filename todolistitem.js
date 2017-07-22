@@ -67,8 +67,11 @@ export default class todoItem {
 
   removeTodoItem() {
     this.todoList.addEventListener('click', (e) => {
-      /*  if (!e.target.matches('.delete')) return;
-        const el = e.target;
+
+      if (!e.target.matches('.delete')) return;
+      e.dispatchEvent(this.deleteItem);
+      this.saveTodoItem();
+      /*  const el = e.target;
         const index = el.dataset.index;
         this.itemsStorage.splice(index, 1);
         this.saveTodoItem();*/

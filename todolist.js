@@ -51,11 +51,11 @@ export default class ToDoList {
   }
 
   deleteEventListen() {
-    this.deleteItem.addEventListener('deleteItem', () => {
-      //    this.customDeleteEvent();
-      //     console.log('done');
+    this.deleteItem.addEventListener('deleteItem', (e) => {
       const el = e.target;
-      this.itemsStorage.splice(index, 1);
+      const elemWithId = this.itemsStorage.find(elem => elem.id === el);
+      console.log(elemWithId);
+      //  this.itemsStorage.splice(index, 1);
     });
   }
 
