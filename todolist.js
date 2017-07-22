@@ -47,7 +47,7 @@ export default class ToDoList {
   // показать при старте все записи листа
   showCurrentList() {
     this.itemsStorage.forEach((elem) => {
-      this.itemsArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList, elem));
+      this.itemsArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, elem));
     });
   }
   // удалить одну запись

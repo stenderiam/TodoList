@@ -1,13 +1,12 @@
 export default class todoItem {
 
-  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList, elem) {
+  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, removeList, elem) {
     this.button = buttonPush;
     this.elem = elem;
     this.inputPush = inputPush;
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
     // this.deleteBtn = document.querySelector('.delete');
-    this.id = idPush;
     this.removeList = removeList;
     this.deleteItemEvent = new CustomEvent('deleteItem', {
       detail: { id: this.id },

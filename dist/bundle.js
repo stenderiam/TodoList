@@ -123,7 +123,7 @@ var ToDoList = function () {
       var _this2 = this;
 
       this.itemsStorage.forEach(function (elem) {
-        _this2.itemsArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.id++, _this2.removeList, elem));
+        _this2.itemsArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.removeList, elem));
       });
     }
     // удалить одну запись
@@ -211,7 +211,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var todoItem = function () {
-  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList, elem) {
+  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, removeList, elem) {
     _classCallCheck(this, todoItem);
 
     this.button = buttonPush;
@@ -220,7 +220,6 @@ var todoItem = function () {
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
     // this.deleteBtn = document.querySelector('.delete');
-    this.id = idPush;
     this.removeList = removeList;
     this.deleteItemEvent = new CustomEvent('deleteItem', {
       detail: { id: this.id }
