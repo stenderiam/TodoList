@@ -10,6 +10,7 @@ const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
     id: 'test',
   },
 ];
+// const itemsStorage = JSON.parse(localStorage.getItem('todo-list'));
 
 export default itemsStorage;
 

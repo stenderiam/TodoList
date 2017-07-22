@@ -25,9 +25,9 @@ const layout = `
                 <input class="button" type="submit" value="+">
             </form>
         </div>
-        <ul class="todo-list"></ul>
-        <div class="remove-List">Remove All</div>
-      </div>
+          <ul class="todo-list"></ul>
+          <div class="remove-List">Remove All</div>
+        </div>
     `;
 
 const first = new ToDoList(layout);

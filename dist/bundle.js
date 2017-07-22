@@ -25,7 +25,7 @@ function _interopRequireDefault(obj) {
 // const inputTest = document.querySelector('.myinput');
 // const btn = document.querySelector('.button');
 
-var layout = '\n       <div class="todoList-container"> \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n        <ul class="todo-list"></ul>\n        <div class="remove-List">Remove All</div>\n      </div>\n    ';
+var layout = '\n       <div class="todoList-container"> \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All</div>\n        </div>\n    ';
 
 var first = new _todolist2.default(layout);
 // const second = new ToDoList(layout);
@@ -45,6 +45,7 @@ var itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [{
   done: true,
   id: 'test'
 }];
+// const itemsStorage = JSON.parse(localStorage.getItem('todo-list'));
 
 exports.default = itemsStorage;
 
@@ -98,7 +99,6 @@ var ToDoList = function () {
     this.itemsStorage = _localStorage2.default;
     this.id = 0;
     this.listArray = [];
-    this.deleteItem;
     this.init();
   }
 
@@ -107,7 +107,7 @@ var ToDoList = function () {
     value: function init() {
       this.showCurrentList();
       this.createTodoItem();
-      //  this.customDeleteEvent();
+      this.deleteEventListen();
     }
 
     // создать новую запись по клику на кнопку
@@ -123,7 +123,6 @@ var ToDoList = function () {
         //  console.log(this.inputID);
       });
     }
-
     // показать при старте все записи листа
 
   }, {
@@ -132,91 +131,20 @@ var ToDoList = function () {
       var _this2 = this;
 
       this.itemsStorage.forEach(function () {
-        _this2.listArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.id++, _this2.removeList, _this2.deleteItem));
+        _this2.listArray.push(new _todolistitem2.default(_this2.inputID, _this2.buttonID, _this2.todoList, _this2.itemsStorage, _this2.id++, _this2.removeList));
       });
     }
-
-    /* customDeleteEvent() {
-        this.deleteItem = new CustomEvent('deleteItem', {
-          detail: { id: 'id' },
-        });
-      } */
-
+  }, {
+    key: "deleteEventListen",
+    value: function deleteEventListen() {
+      document.addEventListener('deleteItem', function (e) {
+        console.log('list', e);
+      });
+    }
   }]);
 
   return ToDoList;
 }();
-
-/*
-
-  constructor(inputTest, btn) {
-    //  this.todoList = todoList;
-    //  this.todoForm = todoForm;
-    // this.removeList = removeList;
-    // this.itemsStorage = itemsStorage;
-    this.btn = btn;
-    this.taskCounter = 0;
-    this.inputTest = inputTest;
-    this.todoForm = document.querySelector('.add-todo');
-    this.removeList = document.querySelector('.remove-List');
-    this.todoList = document.querySelector('.todo-list');
-    // this.del = document.getElementById('delete');
-    this.itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
-      {
-        title: 'Duplicate door key',
-        done: false,
-        //  id: 0,
-      },
-      {
-        title: 'Boom Shka lak',
-        done: true,
-      },
-    ];
-    this.init();
-  }
-
-  init() {
-    this.handler();
-    //  this.customHangler();
-    //  this.showList();
-  }
-
-  showList() {
-    // storage.setItem(keyName, keyValue);
-    localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
-    this.createList(this.itemsStorage, this.todoList);
-    // this.showRemoveButton();
-    console.log(this.itemsStorage);
-  }
-
- createList(list = [], listTarget) {
-   listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
-                 <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
-                 <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
-                 <span id="delete" class="delete" data-index="${i}">X</span>
-          </li>`).join('');
- }
-
- customHangler() {
-   this.showList = new CustomEvent('showList', {
-     detail: {
-       count: 'done',
-     },
-   });
-   this.input.parentNode.addEventListener('showList', (event) => {
-     this.createList(this.itemsStorage, this.todoList);
-   });
- }
-
-handler() {
-  this.btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    new ToDoListItem(this.btn, this.inputTest, this.todoList, this.todoForm, this.removeList, this.itemsStorage, this.taskCounter++);
-  });
-}
-
-}
-*/
 
 exports.default = ToDoList;
 
@@ -244,24 +172,22 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var todoItem = function () {
-  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeListPush, deleteItemPush) {
+  function todoItem(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush) {
     _classCallCheck(this, todoItem);
 
     this.button = buttonPush;
     this.inputPush = inputPush;
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
-    this.removeList = removeListPush;
+    // this.deleteBtn = document.querySelector('.delete');
     this.id = idPush;
-    this.deleteItemPush = deleteItemPush;
-    this.remove;
-    this.createEntry();
+    this.deleteEvent = new CustomEvent('deleteItem', {
+      detail: { id: this.id }
+    });
     this.addTodoItem();
-    this.removeEvent();
+    this.createEntry();
     this.removeTodoItem();
-    //  this.toggleDone();
   }
-
   // создание одной записи в лист
 
 
@@ -272,7 +198,6 @@ var todoItem = function () {
         return '<li class="list-content">\n                  <input class="one-list-item" type="text" for="todo' + i + '" value="' + item.title + '">            \n                  <input type="checkbox" class="checkDone" id="todo' + i + '" data-index="' + i + '" ' + (item.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + i + '">X</span>\n           </li>';
       }).join('');
     }
-
     // добавление одной записи в лист
 
   }, {
@@ -289,19 +214,6 @@ var todoItem = function () {
       //  console.log(this.itemsStorage);
       this.saveTodoItem();
     }
-    /*
-      toggleDone() {
-        this.todoList.addEventListener('click', (e) => {
-          if (!e.target.matches('.checkDone')) return;  
-          const elemWithId10 = this.itemsStorage.find(elem => elem.id === 3); 
-          console.log(elemWithId10);
-          /  const el = e.target;
-             const index = el.dataset.index;
-             this.itemsStorage[index].done = !this.itemsStorage[index].done;
-          this.saveTodoItem();
-        });
-      } */
-
     // сохранение одной записи в лист
 
   }, {
@@ -310,17 +222,6 @@ var todoItem = function () {
       localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
       this.createEntry();
     }
-
-    // очистить список и удалить все записи
-
-  }, {
-    key: 'clearList',
-    value: function clearList() {
-      this.itemsStorage = [];
-      localStorage.removeItem('todo-list');
-      this.createEntry(this.itemsStorage, this.todoList);
-      this.removeList.classList.add('hidden');
-    }
   }, {
     key: 'removeTodoItem',
     value: function removeTodoItem() {
@@ -328,17 +229,10 @@ var todoItem = function () {
 
       this.todoList.addEventListener('click', function (e) {
         if (!e.target.matches('.delete')) return;
-        var el = e.target;
-        var index = el.dataset.index;
-        _this.itemsStorage.splice(index, 1);
-        _this.saveTodoItem();
+        document.dispatchEvent(_this.deleteEvent);
+        //  console.log('item', e);
       });
-      if (this.itemsStorage.length === 0) {
-        this.removeData();
-        this.removeList.classList.add('hidden');
-      }
     }
-
     /* removeTodoItem() {
        this.todoList.addEventListener('click', (e) => {
          if (!e.target.matches('.delete')) return;
@@ -351,136 +245,18 @@ var todoItem = function () {
      } */
 
     // удалить записи по клику на кнопку
-
-  }, {
-    key: 'removeEvent',
-    value: function removeEvent() {
-      var _this2 = this;
-
-      this.removeList.addEventListener('click', function () {
-        _this2.clearList();
-        //   this.removeList.dispatchEvent(this.deleteItemPush);
-      });
-    }
-
-    /*  removeTask() {
-        this.remove.addEventListener("click", () => {
-          this.deleteEvent.detail.number = this.counter;
-          this.parent.parentNode.dispatchEvent(this.deleteEvent);
-          this.mainContainer.remove();
-          this.parent.parentNode.dispatchEvent(this.watch);
+    /*
+      removeEvent() {
+        this.removeList.addEventListener('click', () => {
+          //   this.clearList();
+          document.dispatchEvent(this.deleteList);
         });
       } */
-    // найти по айди, получить объект, поменять false на true 
 
   }]);
 
   return todoItem;
 }();
-
-/*
-   export default class ToDoListItem {
-
-  constructor(btnPush, inputPush, todoListPush, todoFormPush, removeListPush, itemsStoragePush, taskCounterPush) {
-    this.btn = btnPush;
-    //  this.showListEvent = showList;
-    this.input = inputPush;
-    this.todoList = todoListPush;
-    this.todoForm = todoFormPush;
-    this.removeList = removeListPush;
-    this.itemsStorage = itemsStoragePush;
-    this.counter = taskCounterPush;
-    //  this.del = document.getElementById('delete');
-    // this.createList(this.itemsStorage, this.todoList);
-    this.addTodoItem();
-    this.toggleDone();
-    this.removeTodoItem();
-    this.removeEvent();
-  }
-
-  addTodoItem() {
-    if (this.input.value.length === 0) return;
-    const title = this.input.value;
-    //  let setId = this.counter;
-    const todo = {
-      title,
-      done: false,
-      id: this.counter,
-    };
-    this.itemsStorage.push(todo);
-    console.log(this.itemsStorage);
-    this.saveTodoItem();
-  }
-
-
-
-  saveTodoItem() {
-    // storage.setItem(keyName, keyValue);
-    localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
-    this.createList(this.itemsStorage, this.todoList);
-    // this.showRemoveButton();
-  }
-
-  createList(list = [], listTarget) {
-    listTarget.innerHTML = list.map((item, i) => `<li class="list-content">
-                  <input class="one-list-item" type="text" for="todo${i}" value="${item.title}">
-                  <input type="checkbox" class="checkDone" id="todo${i}" data-index="${i}" ${item.done ? 'checked' : ''} />
-                  <span id="delete" class="delete" data-index="${i}">X</span>
-           </li>`).join('');
-  }
-
-  toggleDone() {
-    this.todoList.addEventListener('click', (e) => {
-      if (!e.target.matches('.checkDone')) return;
-      const el = e.target;
-      const index = el.dataset.index;
-      this.itemsStorage[index].done = !this.itemsStorage[index].done;
-      this.saveTodoItem();
-    });
-  }
-
-  removeTodoItem() {
-    // console.log('aaa');
-    this.todoList.addEventListener('click', (e) => {
-      if (!e.target.matches('.delete')) return;
-      const el = e.target;
-      const index = el.dataset.index;
-      // array.splice(start, deleteCount)
-      this.itemsStorage.splice(index, 1);
-
-      // check an array
-
-      console.log(this.itemsStorage);
-      this.saveTodoItem();
-    });
-
-    if (this.itemsStorage.length === 0) {
-      this.removeData();
-      this.removeList.classList.add('hidden');
-    }
-  }
-
-  showRemoveButton() {
-    if (this.itemsStorage.length > 1) return;
-    this.removeList.classList.remove('hidden');
-  }
-
-  removeData() {
-    // clean an object array
-    this.itemsStorage = [];
-    localStorage.removeItem('todo-list');
-    this.createList(this.itemsStorage, this.todoList);
-    this.removeList.classList.add('hidden');
-  }
-
-  removeEvent() {
-    this.removeList.addEventListener('click', () => {
-      this.removeData();
-    });
-  }
-}
-
-*/
 
 exports.default = todoItem;
 
