@@ -15,7 +15,7 @@ export default class ToDoList {
     this.removeList = document.querySelector('.remove-List');
     this.itemsStorage = itemsStorage;
     this.id = 0;
-    this.listArray = [];
+    this.itemsArray = [];
     this.init();
   }
 
@@ -23,6 +23,8 @@ export default class ToDoList {
     this.showCurrentList();
     this.createTodoItem();
     this.deleteEventListen();
+    this.clearListEvent();
+    this.saveItemEventListen();
   }
 
   // создать новую запись по клику на кнопку
@@ -36,12 +38,36 @@ export default class ToDoList {
   // показать при старте все записи листа
   showCurrentList() {
     this.itemsStorage.forEach(() => {
-      this.listArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList));
+      this.itemsArray.push(new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.id++, this.removeList));
     });
   }
   deleteEventListen() {
     document.addEventListener('deleteItem', (e) => {
-      console.log('list', e);
+      const el = e.target;
+      const elemWithId = this.itemsStorage.findIndex(elem => elem.id === el);
+      console.log(elemWithId);
+      this.itemsStorage.splice(elemWithId, 1);
+      this.saveItemEventListen();
+    });
+  }
+
+  saveItemEventListen() {
+    document.addEventListener('saveItem', (e) => {
+      localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
+    });
+  }
+
+  clearList() {
+    this.itemsStorage = [];
+    this.itemsArray = [];
+    localStorage.removeItem('todo-list');
+    this.todoList.innerHTML = '';
+    this.removeList.classList.add('hidden');
+  }
+  // удалить записи по клику на кнопку
+  clearListEvent() {
+    this.removeList.addEventListener('click', () => {
+      this.clearList();
     });
   }
 }

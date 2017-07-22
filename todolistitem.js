@@ -1,13 +1,17 @@
 export default class todoItem {
 
-  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush) {
+  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, idPush, removeList) {
     this.button = buttonPush;
     this.inputPush = inputPush;
     this.todoList = todoListPush;
     this.itemsStorage = itemsStoragePush;
     // this.deleteBtn = document.querySelector('.delete');
     this.id = idPush;
-    this.deleteEvent = new CustomEvent('deleteItem', {
+    this.removeList = removeList;
+    this.deleteItemEvent = new CustomEvent('deleteItem', {
+      detail: { id: this.id },
+    });
+    this.saveItemEvent = new CustomEvent('saveItem', {
       detail: { id: this.id },
     });
     this.addTodoItem();
@@ -32,38 +36,23 @@ export default class todoItem {
       id: this.id,
     };
     this.itemsStorage.push(todo);
-    //  console.log(this.itemsStorage);
+    console.log(this.itemsStorage);
     this.saveTodoItem();
   }
   // сохранение одной записи в лист
   saveTodoItem() {
-    localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
-    this.createEntry();
+    this.button.addEventListener('click', () => {
+      document.dispatchEvent(this.saveItemEvent);
+      this.createEntry();
+    });
   }
+
   removeTodoItem() {
     this.todoList.addEventListener('click', (e) => {
       if (!e.target.matches('.delete')) return;
-      document.dispatchEvent(this.deleteEvent);
+      // this.deleteItemEvent.detail.id = this.id;
+      document.dispatchEvent(this.deleteItemEvent);
       //  console.log('item', e);
     });
   }
-  /* removeTodoItem() {
-     this.todoList.addEventListener('click', (e) => {
-       if (!e.target.matches('.delete')) return;
-       const el = e.target;
-       //  this.itemsStorage.splice(index, 1);
-       el.dispatchEvent(this.deleteItemPush);
-       //    console.log(this.itemsStorage);
-       this.saveTodoItem();
-     });
-   } */
-
-  // удалить записи по клику на кнопку
-  /*
-    removeEvent() {
-      this.removeList.addEventListener('click', () => {
-        //   this.clearList();
-        document.dispatchEvent(this.deleteList);
-      });
-    } */
 }
