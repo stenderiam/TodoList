@@ -14,7 +14,10 @@ body {
     height: 500px;
     background: pink;
 }
-
+.remove-list {
+    width: 200px;
+    background: #ed8078;
+}
 .list-content {
     display: flex;
     justify-content: space-around;

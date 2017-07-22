@@ -1,33 +1,35 @@
 
 import ToDoList from './todolist.js';
 
-// const ToDoList = require('./todolist.js').default;
+// const todoList = document.querySelector('.todo-list');
 
-function ready(fn) {
-  if (document.readyState !== 'loading') {
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
-}
+/* const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
+  {
+    title: 'Duplicate door key',
+    done: false,
+  },
+  {
+    title: 'Boom Shka lak',
+    done: true,
+  },
+]; */
 
-const init = function () {
-  // const todoList = document.querySelector('.todo-list');
+// const inputTest = document.querySelector('.myinput');
+// const btn = document.querySelector('.button');
 
-  /* const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
-    {
-      title: 'Duplicate door key',
-      done: false,
-    },
-    {
-      title: 'Boom Shka lak',
-      done: true,
-    },
-  ]; */
+const layout = `
+       <div class="todoList-container"> 
+          <div id="add-todo">
+            <form class="add-todo">
+                <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
+                <input class="button" type="submit" value="+">
+            </form>
+        </div>
+        <ul class="todo-list"></ul>
+        <div class="remove-List">Remove All</div>
+      </div>
+    `;
 
-  const inputTest = document.querySelector('.myinput');
-  const btn = document.querySelector('.button');
+const first = new ToDoList(layout);
+// const second = new ToDoList(layout);
 
-  new ToDoList(inputTest, btn);
-};
-ready(init);
