@@ -5,9 +5,8 @@ import TodoListItem from './todolistitem.js';
 
 export default class TodoList {
 
-  constructor(itemsStorage, todoLIST) {
+  constructor(itemsStorage, elemLIST) {
     //  this.layout = document.querySelector('.container');
-    this.container = document.querySelector('.container');
     this.layout = `
        <div class="todoList-container"> 
          <input class="headline" type="text" value="">
@@ -22,17 +21,22 @@ export default class TodoList {
           <div class="remove-List">Remove All Items</div>
         </div>
     `;
-    this.container.insertAdjacentHTML('beforeend', this.layout);
-    this.inputID = document.querySelector('.myinput');
-    this.buttonID = document.querySelector('.button');
-    this.todoList = document.querySelector('.todo-list');
-    this.removeList = document.querySelector('.remove-List');
-    this.deleteTodo = document.querySelector('.delete-button');
+    this.todoListContainer = document.createElement('div');
+    this.todoListContainer.innerHTML = this.layout;
+    this.container = document.querySelector('.container');
+    this.container.appendChild(this.todoListContainer);
+
+    this.inputID = this.todoListContainer.querySelector('.myinput');
+    this.buttonID = this.todoListContainer.querySelector('.button');
+    this.todoList = this.todoListContainer.querySelector('.todo-list');
+    this.removeList = this.todoListContainer.querySelector('.remove-List');
+    this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
+
     this.itemsStorage = itemsStorage;
     this.todoItems = {}; // new TodoItem(s)
-    //  this.pushListId = pushListId;
+    this.elemLIST = elemLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: todoLIST.id },
+      detail: { id: elemLIST.id },
     });
     this.init();
   }
@@ -51,7 +55,7 @@ export default class TodoList {
     });
   }
   deleteLIST() {
-    this.layout.remove();
+    this.todoListContainer.remove();
   }
   createTodoItemEvent() {
     this.buttonID.addEventListener('click', (e) => {

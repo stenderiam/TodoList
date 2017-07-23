@@ -28,9 +28,7 @@ export default class TodoBuilder {
       };
       this.ListStorage.push(todoLIST);
       this.saveTodoList();
-      //  this.createNewTodoItem(todoLIST);
-      const todoListObject = new TodoList(this.itemsStorage, todoLIST);
-      this.todoLISTS[todoLIST.id] = todoListObject;
+      this.createNewTodoLIST(todoLIST);
       console.log(this.ListStorage);
     });
   }
@@ -40,11 +38,16 @@ export default class TodoBuilder {
   }
 
   showCurrentLISTS() {
-    this.ListStorage.forEach((todoLIST) => {
-      const todoListObject = new TodoList(this.itemsStorage);
-      this.todoLISTS[todoLIST.id] = todoListObject;
+    this.ListStorage.forEach((elemLIST) => {
+      this.createNewTodoLIST(elemLIST);
     });
   }
+
+  createNewTodoLIST(todoLIST) {
+    const todoListObject = new TodoList(this.itemsStorage, todoLIST);
+    this.todoLISTS[todoLIST.id] = todoListObject;
+  }
+
   deleteTodoLISTEvent() {
     document.addEventListener('deleteLIST', (e) => {
       const elId = e.detail.id;

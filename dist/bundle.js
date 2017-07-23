@@ -6,29 +6,12 @@ var _todoBuilder = require('./modules/todoBuilder.js');
 var _todoBuilder2 = _interopRequireDefault(_todoBuilder);
 
 function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : { default: obj };
+  return obj && obj.__esModule ? obj : { default: obj };
 }
 
-// html элементы для создания одного списка
-/* const layout = `
-      <div class="todoList-container"> 
-         <div id="add-todo">
-           <form class="add-todo">
-               <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
-               <input class="button" type="submit" value="+">
-           </form>
-       </div>
-         <ul class="todo-list"></ul>
-         <div class="remove-List">Remove All</div>
-       </div>
-   `; */
-
 var addLists = '<div class="add-list">ADD NEW LIST</div>';
-// localStorage для записей
-// const itemsStorage = JSON.parse(localStorage.getItem('todolistItems')) || [];
+
 var first = new _todoBuilder2.default(addLists);
-// const second = new TodoBuilder();
-// const second = new TodoList(layout, itemsStorage);
 
 },{"./modules/todoBuilder.js":2}],2:[function(require,module,exports){
 'use strict';
@@ -103,9 +86,7 @@ var TodoBuilder = function () {
         };
         _this.ListStorage.push(todoLIST);
         _this.saveTodoList();
-        //  this.createNewTodoItem(todoLIST);
-        var todoListObject = new _todolist2.default(_this.itemsStorage, todoLIST);
-        _this.todoLISTS[todoLIST.id] = todoListObject;
+        _this.createNewTodoLIST(todoLIST);
         console.log(_this.ListStorage);
       });
     }
@@ -119,10 +100,15 @@ var TodoBuilder = function () {
     value: function showCurrentLISTS() {
       var _this2 = this;
 
-      this.ListStorage.forEach(function (todoLIST) {
-        var todoListObject = new _todolist2.default(_this2.itemsStorage);
-        _this2.todoLISTS[todoLIST.id] = todoListObject;
+      this.ListStorage.forEach(function (elemLIST) {
+        _this2.createNewTodoLIST(elemLIST);
       });
+    }
+  }, {
+    key: 'createNewTodoLIST',
+    value: function createNewTodoLIST(todoLIST) {
+      var todoListObject = new _todolist2.default(this.itemsStorage, todoLIST);
+      this.todoLISTS[todoLIST.id] = todoListObject;
     }
   }, {
     key: 'deleteTodoLISTEvent',
@@ -144,9 +130,6 @@ var TodoBuilder = function () {
 
   return TodoBuilder;
 }();
-
-// localStorage.removeItem(todo-list${todoList.id});
-
 
 exports.default = TodoBuilder;
 
@@ -193,23 +176,27 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var TodoList = function () {
-  function TodoList(itemsStorage, todoLIST) {
+  function TodoList(itemsStorage, elemLIST) {
     _classCallCheck(this, TodoList);
 
     //  this.layout = document.querySelector('.container');
-    this.container = document.querySelector('.container');
     this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text" value="">\n         <input class="delete-button" type="submit" value="delete list">\n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
-    this.container.insertAdjacentHTML('beforeend', this.layout);
-    this.inputID = document.querySelector('.myinput');
-    this.buttonID = document.querySelector('.button');
-    this.todoList = document.querySelector('.todo-list');
-    this.removeList = document.querySelector('.remove-List');
-    this.deleteTodo = document.querySelector('.delete-button');
+    this.todoListContainer = document.createElement('div');
+    this.todoListContainer.innerHTML = this.layout;
+    this.container = document.querySelector('.container');
+    this.container.appendChild(this.todoListContainer);
+
+    this.inputID = this.todoListContainer.querySelector('.myinput');
+    this.buttonID = this.todoListContainer.querySelector('.button');
+    this.todoList = this.todoListContainer.querySelector('.todo-list');
+    this.removeList = this.todoListContainer.querySelector('.remove-List');
+    this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
+
     this.itemsStorage = itemsStorage;
     this.todoItems = {}; // new TodoItem(s)
-    //  this.pushListId = pushListId;
+    this.elemLIST = elemLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: todoLIST.id }
+      detail: { id: elemLIST.id }
     });
     this.init();
   }
@@ -236,7 +223,7 @@ var TodoList = function () {
   }, {
     key: 'deleteLIST',
     value: function deleteLIST() {
-      this.layout.remove();
+      this.todoListContainer.remove();
     }
   }, {
     key: 'createTodoItemEvent',
