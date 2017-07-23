@@ -55,7 +55,4 @@ export default class TodoBuilder {
       this.saveTodoList();
     });
   }
-
 }
-
-// localStorage.removeItem(todo-list${todoList.id});
