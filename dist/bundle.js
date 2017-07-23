@@ -78,6 +78,7 @@ var ToDoList = function () {
     this.itemsStorage = itemsStorage;
     this.id = 0;
     this.itemsArray = [];
+    this.todoItems = {};
     this.init();
   }
 
@@ -111,7 +112,10 @@ var ToDoList = function () {
           id: maxId + 1
         };
         _this.itemsStorage.push(todo);
+        _this.saveItem();
         new _todolistitem2.default(_this.inputID, _this.buttonID, _this.todoList, _this.itemsStorage, _this.removeList, todo);
+        var todoObject = new _todolistitem2.default();
+        _this.todoItems[todo.id] = todoObject;
         //  console.log(this.inputID);
       });
     }
@@ -134,12 +138,11 @@ var ToDoList = function () {
       var _this3 = this;
 
       document.addEventListener('deleteItem', function (e) {
-        var el = e.target;
-        var elemWithId = _this3.itemsStorage.findIndex(function (elem) {
-          return elem.id === el;
-        });
-        console.log(elemWithId);
-        _this3.itemsStorage.splice(elemWithId, 1);
+        var el = e.detail.id;
+        //   const elemWithId = this.itemsStorage.findIndex(elem => elem.id === el);
+        //  console.log(elemWithId);
+        // this.itemsStorage.splice(elemWithId, 1);
+        _this3.todoItems[el].deleteItem();
         _this3.saveItem();
       });
     }
@@ -222,13 +225,14 @@ var todoItem = function () {
     // this.deleteBtn = document.querySelector('.delete');
     this.removeList = removeList;
     this.deleteItemEvent = new CustomEvent('deleteItem', {
-      detail: { id: this.id }
+      detail: { id: this.elem.id }
     });
     this.saveItemEvent = new CustomEvent('saveItem', {
-      detail: { id: this.id }
+      detail: { id: this.elem.id }
     });
     //   this.addTodoItem();
-    this.saveTodoItem();
+    // this.saveTodoItem();
+
     this.createEntry();
     this.removeTodoItem();
   }
@@ -242,44 +246,31 @@ var todoItem = function () {
       var elemLi = document.createElement('li');
       elemLi.className = 'list-content';
       this.todoList.appendChild(elemLi);
-      var elemHtml = '<input class="one-list-item" type="text" for="todo' + this.id + '" value="' + elemCreate.title + '">            \n                  <input type="checkbox" class="checkDone" id="todo' + this.id + '" data-index="' + this.id + '" ' + (elemCreate.done ? 'checked' : '') + ' />\n                  <span id="delete" class="delete" data-index="' + this.id + '">X</span>';
+      var elemHtml = '<input class="one-list-item" type="text" for="todo' + this.id + '" value="' + elemCreate.title + '">            \n                  <input type="checkbox" class="checkDone" id="todo' + this.id + '" data-index="' + this.id + '" ' + (elemCreate.done ? 'checked' : '') + ' /> ';
       elemLi.innerHTML = elemHtml;
+      var deleteButton = document.createElement('div');
+      deleteButton.className = 'delete';
+      deleteButton.innerHTML = '<span>X</span>';
+      elemLi.appendChild(deleteButton);
+      this.elemLi = elemLi;
+      this.deleteButton = deleteButton;
     }
-
-    // добавление одной записи в лист
-    /* addTodoItem() {
-       if (this.inputPush.value.length === 0) return;
-       const title = this.inputPush.value;
-       const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => { return elem.id; }));
-       const todo = {
-         title,
-         done: false,
-         id: maxId,
-       };
-       this.itemsStorage.push(todo);
-       console.log(this.itemsStorage);
-       } */
-    // сохранение одной записи в лист
-
   }, {
-    key: 'saveTodoItem',
-    value: function saveTodoItem() {
-      var _this = this;
-
-      this.button.addEventListener('click', function () {
-        document.dispatchEvent(_this.saveItemEvent);
-        _this.createEntry();
-      });
+    key: 'deleteItem',
+    value: function deleteItem() {
+      this.elemLi.remove();
     }
   }, {
     key: 'removeTodoItem',
     value: function removeTodoItem() {
-      var _this2 = this;
+      var _this = this;
 
-      this.todoList.addEventListener('click', function (e) {
-        if (!e.target.matches('.delete')) return;
+      this.deleteButton.addEventListener('click', function () {
+        //   if (!e.target.matches('.delete')) return;
         // this.deleteItemEvent.detail.id = this.id;
-        document.dispatchEvent(_this2.deleteItemEvent);
+
+        document.dispatchEvent(_this.deleteItemEvent);
+        // this.deleteItem();
         //  console.log('item', e);
       });
     }

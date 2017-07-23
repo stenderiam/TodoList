@@ -16,6 +16,7 @@ export default class ToDoList {
     this.itemsStorage = itemsStorage;
     this.id = 0;
     this.itemsArray = [];
+    this.todoItems = {};
     this.init();
   }
 
@@ -33,14 +34,19 @@ export default class ToDoList {
       e.preventDefault();
       if (this.inputID.value.length === 0) return;
       const title = this.inputID.value;
-      const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => { return elem.id; }))
+      const maxId = Math.max.apply(Math, this.itemsStorage.map((elem) => {
+        return elem.id;
+      }));
       const todo = {
         title,
         done: false,
         id: maxId + 1,
       };
       this.itemsStorage.push(todo);
+      this.saveItem();
       new todoItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, todo);
+      const todoObject = new todoItem;
+      this.todoItems[todo.id] = todoObject;
       //  console.log(this.inputID);
     });
   }
@@ -53,10 +59,11 @@ export default class ToDoList {
   // удалить одну запись
   deleteEventListen() {
     document.addEventListener('deleteItem', (e) => {
-      const el = e.target;
-      const elemWithId = this.itemsStorage.findIndex(elem => elem.id === el);
-      console.log(elemWithId);
-      this.itemsStorage.splice(elemWithId, 1);
+      const el = e.detail.id;
+      //   const elemWithId = this.itemsStorage.findIndex(elem => elem.id === el);
+      //  console.log(elemWithId);
+      // this.itemsStorage.splice(elemWithId, 1);
+      this.todoItems[el].deleteItem();
       this.saveItem();
     });
   }
@@ -71,7 +78,6 @@ export default class ToDoList {
   saveItem() {
     localStorage.setItem('todo-list', JSON.stringify(this.itemsStorage));
   }
-
   clearList() {
     this.itemsStorage = [];
     this.itemsArray = [];
