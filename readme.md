@@ -14,14 +14,20 @@
 * createTodoItem() - create new todo item (entry) on click
 
     get input value as a title
+    
     get max id of each item in itemsStorage
+    
     add max id + 1 to each object item -> todo{}
+    
     save this item
+    
     create object item
 
     to spread the values of an array across the parameters of the function
+    
     use example(...args);
-    instead of example.apply(null, args);
+    
+    instead of example.apply(null, args); 
 
 * showCurrentList()  
 
