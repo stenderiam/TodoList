@@ -1,20 +1,39 @@
 // TODO: later, to change current methods to pure fanctions
 
 
-import TodoListItem from './modules/todolistitem.js';
+import TodoListItem from './todolistitem.js';
 
 export default class TodoList {
 
-  constructor(layout, itemsStorage) {
-    this.layout = document.querySelector('.container');
-    this.layout.insertAdjacentHTML('beforeend', layout);
+  constructor(itemsStorage, pushListId) {
+    //  this.layout = document.querySelector('.container');
+    this.container = document.querySelector('.container');
+    this.layout = `
+       <div class="todoList-container"> 
+         <input class="headline" type="text" value="">
+         <input class="delete-button" type="submit" value="delete list">
+          <div id="add-todo">
+            <form class="add-todo">
+                <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
+                <input class="button" type="submit" value="+">
+            </form>
+        </div>
+          <ul class="todo-list"></ul>
+          <div class="remove-List">Remove All Items</div>
+        </div>
+    `;
+    this.container.insertAdjacentHTML('beforeend', this.layout);
     this.inputID = document.querySelector('.myinput');
     this.buttonID = document.querySelector('.button');
     this.todoList = document.querySelector('.todo-list');
     this.removeList = document.querySelector('.remove-List');
+    this.deleteTodo = document.querySelector('.delete-button');
     this.itemsStorage = itemsStorage;
-
     this.todoItems = {}; // new TodoItem(s)
+    this.pushListId = pushListId;
+    this.deleteLISTEvent = new CustomEvent('deleteLIST', {
+      detail: { id: pushListId.id },
+    });
     this.init();
   }
   init() {
@@ -23,6 +42,13 @@ export default class TodoList {
     this.deleteTodoItemEvent();
     this.clearListEvent();
     this.updateTodoItemEvent();
+    this.removeTodoLIST();
+  }
+
+  removeTodoLIST() {
+    this.deleteTodo.addEventListener('click', () => {
+      document.dispatchEvent(this.deleteLISTEvent);
+    });
   }
   createTodoItemEvent() {
     this.buttonID.addEventListener('click', (e) => {

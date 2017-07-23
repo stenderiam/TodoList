@@ -1,7 +1,10 @@
 body {
     background-color: #F2F2F2;
 }
-
+.add-list{
+    background: yellowgreen;
+    width: 100px;
+}
 .container {
     width: 40%;
     background-color: white;
@@ -9,12 +12,15 @@ body {
     margin: 0 auto;
     letter-spacing: 1px;
 }
+.todoList-container{
+ margin-top: 50px;
+}
 
-.note-menu {
+.todo-list {
     height: 500px;
     background: pink;
 }
-.remove-list {
+.remove-List {
     width: 200px;
     background: #ed8078;
 }
