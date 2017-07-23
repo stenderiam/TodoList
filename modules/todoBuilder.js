@@ -1,9 +1,6 @@
 import TodoList from './todolist.js';
 
-
-
 export default class TodoBuilder {
-
 
   constructor(addLists) {
     this.container = document.querySelector('.container');
@@ -11,7 +8,6 @@ export default class TodoBuilder {
     this.addLists = document.querySelector('.add-list');
 
     this.ListStorage = JSON.parse(localStorage.getItem('todoLISTStorage')) || [];
-    this.itemsStorage = JSON.parse(localStorage.getItem('todolistItems')) || [];
     this.todoLISTS = {};
     this.createTodoLIST();
     this.showCurrentLISTS();

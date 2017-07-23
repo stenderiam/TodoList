@@ -63,7 +63,6 @@ var TodoBuilder = function () {
     this.addLists = document.querySelector('.add-list');
 
     this.ListStorage = JSON.parse(localStorage.getItem('todoLISTStorage')) || [];
-    this.itemsStorage = JSON.parse(localStorage.getItem('todolistItems')) || [];
     this.todoLISTS = {};
     this.createTodoLIST();
     this.showCurrentLISTS();
@@ -179,8 +178,7 @@ var TodoList = function () {
   function TodoList(itemsStorage, elemLIST) {
     _classCallCheck(this, TodoList);
 
-    //  this.layout = document.querySelector('.container');
-    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text" value="">\n         <input class="delete-button" type="submit" value="delete list">\n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
+    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text" value="">\n         <input class="delete-button" type="submit" value="delete list">\n             \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
     this.todoListContainer = document.createElement('div');
     this.todoListContainer.innerHTML = this.layout;
     this.container = document.querySelector('.container');
@@ -191,8 +189,7 @@ var TodoList = function () {
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.remove-List');
     this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
-
-    this.itemsStorage = itemsStorage;
+    this.itemsStorage = JSON.parse(localStorage.getItem('todolistItems' + elemLIST.id)) || [];
     this.todoItems = {}; // new TodoItem(s)
     this.elemLIST = elemLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
@@ -250,7 +247,7 @@ var TodoList = function () {
   }, {
     key: 'saveTodoItem',
     value: function saveTodoItem() {
-      localStorage.setItem('todolistItems', JSON.stringify(this.itemsStorage));
+      localStorage.setItem('todolistItems' + this.elemLIST.id, JSON.stringify(this.itemsStorage));
     }
   }, {
     key: 'createNewTodoItem',
@@ -302,7 +299,7 @@ var TodoList = function () {
     value: function clearList() {
       this.itemsStorage = [];
       this.todoItems = {};
-      localStorage.removeItem('todolistItems');
+      localStorage.removeItem('todolistItems' + this.elemLIST.id);
       this.todoList.innerHTML = '';
       this.removeList.classList.add('hidden');
     }

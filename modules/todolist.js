@@ -6,11 +6,11 @@ import TodoListItem from './todolistitem.js';
 export default class TodoList {
 
   constructor(itemsStorage, elemLIST) {
-    //  this.layout = document.querySelector('.container');
     this.layout = `
        <div class="todoList-container"> 
          <input class="headline" type="text" value="">
          <input class="delete-button" type="submit" value="delete list">
+             
           <div id="add-todo">
             <form class="add-todo">
                 <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
@@ -31,8 +31,7 @@ export default class TodoList {
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.remove-List');
     this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
-
-    this.itemsStorage = itemsStorage;
+    this.itemsStorage = JSON.parse(localStorage.getItem(`todolistItems${elemLIST.id}`)) || [];
     this.todoItems = {}; // new TodoItem(s)
     this.elemLIST = elemLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
@@ -74,7 +73,7 @@ export default class TodoList {
     });
   }
   saveTodoItem() {
-    localStorage.setItem('todolistItems', JSON.stringify(this.itemsStorage));
+    localStorage.setItem(`todolistItems${this.elemLIST.id}`, JSON.stringify(this.itemsStorage));
   }
   createNewTodoItem(todoItem) {
     const todoItemObject = new TodoListItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, todoItem);
@@ -106,7 +105,7 @@ export default class TodoList {
   clearList() {
     this.itemsStorage = [];
     this.todoItems = {};
-    localStorage.removeItem('todolistItems');
+    localStorage.removeItem(`todolistItems${this.elemLIST.id}`);
     this.todoList.innerHTML = '';
     this.removeList.classList.add('hidden');
   }
