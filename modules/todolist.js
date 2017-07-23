@@ -5,7 +5,7 @@ import TodoListItem from './todolistitem.js';
 
 export default class TodoList {
 
-  constructor(itemsStorage, pushListId) {
+  constructor(itemsStorage, todoLIST) {
     //  this.layout = document.querySelector('.container');
     this.container = document.querySelector('.container');
     this.layout = `
@@ -30,9 +30,9 @@ export default class TodoList {
     this.deleteTodo = document.querySelector('.delete-button');
     this.itemsStorage = itemsStorage;
     this.todoItems = {}; // new TodoItem(s)
-    this.pushListId = pushListId;
+    //  this.pushListId = pushListId;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: pushListId.id },
+      detail: { id: todoLIST.id },
     });
     this.init();
   }
@@ -49,6 +49,9 @@ export default class TodoList {
     this.deleteTodo.addEventListener('click', () => {
       document.dispatchEvent(this.deleteLISTEvent);
     });
+  }
+  deleteLIST() {
+    this.layout.remove();
   }
   createTodoItemEvent() {
     this.buttonID.addEventListener('click', (e) => {

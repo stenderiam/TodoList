@@ -98,15 +98,13 @@ var TodoBuilder = function () {
         var maxListId = _this.ListStorage.length > 0 ? Math.max.apply(Math, _toConsumableArray(_this.ListStorage.map(function (elem) {
           return elem.id;
         }))) : 0;
-        _this.pushListId = maxListId + 1;
-        var todoListObject = new _todolist2.default(_this.itemsStorage, _this.pushListId);
         var todoLIST = {
-          id: _this.pushListId,
-          todoListObject: todoListObject
+          id: maxListId + 1
         };
         _this.ListStorage.push(todoLIST);
         _this.saveTodoList();
         //  this.createNewTodoItem(todoLIST);
+        var todoListObject = new _todolist2.default(_this.itemsStorage, todoLIST);
         _this.todoLISTS[todoLIST.id] = todoListObject;
         console.log(_this.ListStorage);
       });
@@ -137,23 +135,11 @@ var TodoBuilder = function () {
           return elem.id === elId;
         });
         _this3.ListStorage.splice(index, 1);
-        _this3.todoLISTS[elId].innerHTML = '';
+        _this3.todoLISTS[elId].deleteLIST();
         delete _this3.todoLISTS[elId];
         _this3.saveTodoList();
       });
     }
-
-    /*  deleteTodoItemEvent() {
-        document.addEventListener('deleteItem', (e) => {
-          const elId = e.detail.id;
-          const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-          this.itemsStorage.splice(index, 1);
-          this.todoItems[elId].deleteItem();
-          delete this.todoItems[elId];
-          this.saveTodoItem();
-        });
-      } */
-
   }]);
 
   return TodoBuilder;
@@ -207,7 +193,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var TodoList = function () {
-  function TodoList(itemsStorage, pushListId) {
+  function TodoList(itemsStorage, todoLIST) {
     _classCallCheck(this, TodoList);
 
     //  this.layout = document.querySelector('.container');
@@ -221,9 +207,9 @@ var TodoList = function () {
     this.deleteTodo = document.querySelector('.delete-button');
     this.itemsStorage = itemsStorage;
     this.todoItems = {}; // new TodoItem(s)
-    this.pushListId = pushListId;
+    //  this.pushListId = pushListId;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: pushListId.id }
+      detail: { id: todoLIST.id }
     });
     this.init();
   }
@@ -246,6 +232,11 @@ var TodoList = function () {
       this.deleteTodo.addEventListener('click', function () {
         document.dispatchEvent(_this.deleteLISTEvent);
       });
+    }
+  }, {
+    key: 'deleteLIST',
+    value: function deleteLIST() {
+      this.layout.remove();
     }
   }, {
     key: 'createTodoItemEvent',
