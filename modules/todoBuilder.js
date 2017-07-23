@@ -6,13 +6,17 @@ export default class TodoBuilder {
     this.container = document.querySelector('.container');
     this.container.insertAdjacentHTML('afterend', addLists);
     this.addLists = document.querySelector('.add-list');
-
     this.ListStorage = JSON.parse(localStorage.getItem('todoLISTStorage')) || [];
     this.todoLISTS = {};
     this.createTodoLIST();
     this.showCurrentLISTS();
     this.deleteTodoLISTEvent();
+    this.headlineChangeEvent();
   }
+
+
+
+
 
   createTodoLIST() {
     this.addLists.addEventListener('click', (e) => {
@@ -21,6 +25,7 @@ export default class TodoBuilder {
       const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
       const todoLIST = {
         id: maxListId + 1,
+        todoListTitle: '',
       };
       this.ListStorage.push(todoLIST);
       this.saveTodoList();
@@ -28,6 +33,18 @@ export default class TodoBuilder {
       console.log(this.ListStorage);
     });
   }
+
+  headlineChangeEvent() {
+    document.addEventListener('headlineInputChange', (e) => {
+      // const todoTitle = this.headline.value;
+      const elId = e.detail.todoLIST.id;
+      const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
+      this.itemsStorage[index] = e.detail.todoLIST;
+      this.saveTodoList();
+    });
+  }
+
+
 
   saveTodoList() {
     localStorage.setItem('todoLISTStorage', JSON.stringify(this.ListStorage));

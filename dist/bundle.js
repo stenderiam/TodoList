@@ -61,12 +61,12 @@ var TodoBuilder = function () {
     this.container = document.querySelector('.container');
     this.container.insertAdjacentHTML('afterend', addLists);
     this.addLists = document.querySelector('.add-list');
-
     this.ListStorage = JSON.parse(localStorage.getItem('todoLISTStorage')) || [];
     this.todoLISTS = {};
     this.createTodoLIST();
     this.showCurrentLISTS();
     this.deleteTodoLISTEvent();
+    this.headlineChangeEvent();
   }
 
   _createClass(TodoBuilder, [{
@@ -81,12 +81,28 @@ var TodoBuilder = function () {
           return elem.id;
         }))) : 0;
         var todoLIST = {
-          id: maxListId + 1
+          id: maxListId + 1,
+          todoListTitle: ''
         };
         _this.ListStorage.push(todoLIST);
         _this.saveTodoList();
         _this.createNewTodoLIST(todoLIST);
         console.log(_this.ListStorage);
+      });
+    }
+  }, {
+    key: 'headlineChangeEvent',
+    value: function headlineChangeEvent() {
+      var _this2 = this;
+
+      document.addEventListener('headlineInputChange', function (e) {
+        // const todoTitle = this.headline.value;
+        var elId = e.detail.todoLIST.id;
+        var index = _this2.ListStorage.findIndex(function (todoLIST) {
+          return todoLIST.id === elId;
+        });
+        _this2.itemsStorage[index] = e.detail.todoLIST;
+        _this2.saveTodoList();
       });
     }
   }, {
@@ -97,10 +113,10 @@ var TodoBuilder = function () {
   }, {
     key: 'showCurrentLISTS',
     value: function showCurrentLISTS() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.ListStorage.forEach(function (elemLIST) {
-        _this2.createNewTodoLIST(elemLIST);
+        _this3.createNewTodoLIST(elemLIST);
       });
     }
   }, {
@@ -112,17 +128,17 @@ var TodoBuilder = function () {
   }, {
     key: 'deleteTodoLISTEvent',
     value: function deleteTodoLISTEvent() {
-      var _this3 = this;
+      var _this4 = this;
 
       document.addEventListener('deleteLIST', function (e) {
         var elId = e.detail.id;
-        var index = _this3.ListStorage.findIndex(function (elem) {
+        var index = _this4.ListStorage.findIndex(function (elem) {
           return elem.id === elId;
         });
-        _this3.ListStorage.splice(index, 1);
-        _this3.todoLISTS[elId].deleteLIST();
-        delete _this3.todoLISTS[elId];
-        _this3.saveTodoList();
+        _this4.ListStorage.splice(index, 1);
+        _this4.todoLISTS[elId].deleteLIST();
+        delete _this4.todoLISTS[elId];
+        _this4.saveTodoList();
       });
     }
   }]);
@@ -183,7 +199,7 @@ var TodoList = function () {
     this.todoListContainer.innerHTML = this.layout;
     this.container = document.querySelector('.container');
     this.container.appendChild(this.todoListContainer);
-
+    this.headline = this.todoListContainer.querySelector('.headline');
     this.inputID = this.todoListContainer.querySelector('.myinput');
     this.buttonID = this.todoListContainer.querySelector('.button');
     this.todoList = this.todoListContainer.querySelector('.todo-list');
@@ -194,6 +210,9 @@ var TodoList = function () {
     this.elemLIST = elemLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
       detail: { id: elemLIST.id }
+    });
+    this.headlineEvent = new CustomEvent('headlineInputChange', {
+      detail: {}
     });
     this.init();
   }
@@ -207,14 +226,25 @@ var TodoList = function () {
       this.clearListEvent();
       this.updateTodoItemEvent();
       this.removeTodoLIST();
+      this.headlineChange();
+    }
+  }, {
+    key: 'headlineChange',
+    value: function headlineChange() {
+      var _this = this;
+
+      this.headline.addEventListener('change', function () {
+        _this.headlineEvent.detail.elemLIST = Object.assign({}, _this.elemLIST, { todoListTitle: _this.headline.value });
+        document.dispatchEvent(_this.headlineEvent);
+      });
     }
   }, {
     key: 'removeTodoLIST',
     value: function removeTodoLIST() {
-      var _this = this;
+      var _this2 = this;
 
       this.deleteTodo.addEventListener('click', function () {
-        document.dispatchEvent(_this.deleteLISTEvent);
+        document.dispatchEvent(_this2.headlineEvent);
       });
     }
   }, {
@@ -225,13 +255,13 @@ var TodoList = function () {
   }, {
     key: 'createTodoItemEvent',
     value: function createTodoItemEvent() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.buttonID.addEventListener('click', function (e) {
         e.preventDefault();
-        if (_this2.inputID.value.length === 0) return;
-        var title = _this2.inputID.value;
-        var maxId = _this2.itemsStorage.length > 0 ? Math.max.apply(Math, _toConsumableArray(_this2.itemsStorage.map(function (elem) {
+        if (_this3.inputID.value.length === 0) return;
+        var title = _this3.inputID.value;
+        var maxId = _this3.itemsStorage.length > 0 ? Math.max.apply(Math, _toConsumableArray(_this3.itemsStorage.map(function (elem) {
           return elem.id;
         }))) : 0;
         var todoItem = {
@@ -239,9 +269,9 @@ var TodoList = function () {
           done: false,
           id: maxId + 1
         };
-        _this2.itemsStorage.push(todoItem);
-        _this2.saveTodoItem();
-        _this2.createNewTodoItem(todoItem);
+        _this3.itemsStorage.push(todoItem);
+        _this3.saveTodoItem();
+        _this3.createNewTodoItem(todoItem);
       });
     }
   }, {
@@ -258,40 +288,40 @@ var TodoList = function () {
   }, {
     key: 'showCurrentList',
     value: function showCurrentList() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.itemsStorage.forEach(function (elem) {
-        _this3.createNewTodoItem(elem);
+        _this4.createNewTodoItem(elem);
       });
     }
   }, {
     key: 'deleteTodoItemEvent',
     value: function deleteTodoItemEvent() {
-      var _this4 = this;
+      var _this5 = this;
 
       document.addEventListener('deleteItem', function (e) {
         var elId = e.detail.id;
-        var index = _this4.itemsStorage.findIndex(function (elem) {
+        var index = _this5.itemsStorage.findIndex(function (elem) {
           return elem.id === elId;
         });
-        _this4.itemsStorage.splice(index, 1);
-        _this4.todoItems[elId].deleteItem();
-        delete _this4.todoItems[elId];
-        _this4.saveTodoItem();
+        _this5.itemsStorage.splice(index, 1);
+        _this5.todoItems[elId].deleteItem();
+        delete _this5.todoItems[elId];
+        _this5.saveTodoItem();
       });
     }
   }, {
     key: 'updateTodoItemEvent',
     value: function updateTodoItemEvent() {
-      var _this5 = this;
+      var _this6 = this;
 
       document.addEventListener('updateItem', function (e) {
         var elId = e.detail.elem.id;
-        var index = _this5.itemsStorage.findIndex(function (elem) {
+        var index = _this6.itemsStorage.findIndex(function (elem) {
           return elem.id === elId;
         });
-        _this5.itemsStorage[index] = e.detail.elem;
-        _this5.saveTodoItem();
+        _this6.itemsStorage[index] = e.detail.elem;
+        _this6.saveTodoItem();
       });
     }
   }, {
@@ -306,10 +336,10 @@ var TodoList = function () {
   }, {
     key: 'clearListEvent',
     value: function clearListEvent() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.removeList.addEventListener('click', function () {
-        _this6.clearList();
+        _this7.clearList();
       });
     }
   }]);

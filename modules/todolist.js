@@ -25,7 +25,7 @@ export default class TodoList {
     this.todoListContainer.innerHTML = this.layout;
     this.container = document.querySelector('.container');
     this.container.appendChild(this.todoListContainer);
-
+    this.headline = this.todoListContainer.querySelector('.headline');
     this.inputID = this.todoListContainer.querySelector('.myinput');
     this.buttonID = this.todoListContainer.querySelector('.button');
     this.todoList = this.todoListContainer.querySelector('.todo-list');
@@ -37,6 +37,9 @@ export default class TodoList {
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
       detail: { id: elemLIST.id },
     });
+    this.headlineEvent = new CustomEvent('headlineInputChange', {
+      detail: {},
+    });
     this.init();
   }
   init() {
@@ -46,11 +49,19 @@ export default class TodoList {
     this.clearListEvent();
     this.updateTodoItemEvent();
     this.removeTodoLIST();
+    this.headlineChange();
+  }
+
+  headlineChange() {
+    this.headline.addEventListener('change', () => {
+      this.headlineEvent.detail.elemLIST = Object.assign({}, this.elemLIST, { todoListTitle: this.headline.value });
+      document.dispatchEvent(this.headlineEvent);
+    });
   }
 
   removeTodoLIST() {
     this.deleteTodo.addEventListener('click', () => {
-      document.dispatchEvent(this.deleteLISTEvent);
+      document.dispatchEvent(this.headlineEvent);
     });
   }
   deleteLIST() {
