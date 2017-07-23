@@ -1,22 +1,7 @@
 
-import ToDoList from './todolist.js';
+import TodoList from './modules/todolist.js';
 
-// const todoList = document.querySelector('.todo-list');
-
-/* const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [
-  {
-    title: 'Duplicate door key',
-    done: false,
-  },
-  {
-    title: 'Boom Shka lak',
-    done: true,
-  },
-]; */
-
-// const inputTest = document.querySelector('.myinput');
-// const btn = document.querySelector('.button');
-
+// html элементы для создания одного списка
 const layout = `
        <div class="todoList-container"> 
           <div id="add-todo">
@@ -29,7 +14,9 @@ const layout = `
           <div class="remove-List">Remove All</div>
         </div>
     `;
-const itemsStorage = JSON.parse(localStorage.getItem('todo-list')) || [];
-const first = new ToDoList(layout, itemsStorage);
-// const second = new ToDoList(layout);
+
+// localStorage для записей
+const itemsStorage = JSON.parse(localStorage.getItem('todolistItems')) || [];
+const first = new TodoList(layout, itemsStorage);
+// const second = new TodoList(layout, itemsStorage);
 
