@@ -23,24 +23,26 @@ export default class TodoBuilder {
       const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
       const todoLIST = {
         id: maxListId + 1,
+        todoListTitle: '',
       };
       this.ListStorage.push(todoLIST);
       this.saveTodoList();
       this.createNewTodoLIST(todoLIST);
-      console.log(this.ListStorage);
+      //  console.log(this.ListStorage);
     });
   }
 
   headlineChangeEvent() {
     document.addEventListener('headlineInputChange', (e) => {
+      console.log('ffff');
       const elId = e.detail.todoLIST.id;
       const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
-      this.itemsStorage[index] = e.detail.todoLIST;
+
+      this.ListStorage[index] = e.detail.todoLIST;
       this.saveTodoList();
+      console.log(this.ListStorage);
     });
   }
-
-
 
   saveTodoList() {
     localStorage.setItem('todoLISTStorage', JSON.stringify(this.ListStorage));

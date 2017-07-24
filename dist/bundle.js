@@ -81,12 +81,13 @@ var TodoBuilder = function () {
           return elem.id;
         }))) : 0;
         var todoLIST = {
-          id: maxListId + 1
+          id: maxListId + 1,
+          todoListTitle: ''
         };
         _this.ListStorage.push(todoLIST);
         _this.saveTodoList();
         _this.createNewTodoLIST(todoLIST);
-        console.log(_this.ListStorage);
+        //  console.log(this.ListStorage);
       });
     }
   }, {
@@ -95,12 +96,15 @@ var TodoBuilder = function () {
       var _this2 = this;
 
       document.addEventListener('headlineInputChange', function (e) {
+        console.log('ffff');
         var elId = e.detail.todoLIST.id;
         var index = _this2.ListStorage.findIndex(function (todoLIST) {
           return todoLIST.id === elId;
         });
-        _this2.itemsStorage[index] = e.detail.todoLIST;
+
+        _this2.ListStorage[index] = e.detail.todoLIST;
         _this2.saveTodoList();
+        console.log(_this2.ListStorage);
       });
     }
   }, {
@@ -189,10 +193,10 @@ function _classCallCheck(instance, Constructor) {
 }
 
 var TodoList = function () {
-  function TodoList(itemsStorage, elemLIST) {
+  function TodoList(itemsStorage, todoLIST) {
     _classCallCheck(this, TodoList);
 
-    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text" value="">\n         <input class="delete-button" type="submit" value="delete list">\n             \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
+    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text">\n         <input class="delete-button" type="submit" value="delete list">\n             \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
     this.todoListContainer = document.createElement('div');
     this.todoListContainer.innerHTML = this.layout;
     this.container = document.querySelector('.container');
@@ -203,11 +207,11 @@ var TodoList = function () {
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.remove-List');
     this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
-    this.itemsStorage = JSON.parse(localStorage.getItem('todolistItems' + elemLIST.id)) || [];
+    this.itemsStorage = JSON.parse(localStorage.getItem('todolistItems' + todoLIST.id)) || [];
     this.todoItems = {}; // new TodoItem(s)
-    this.elemLIST = elemLIST;
+    this.todoLIST = todoLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: elemLIST.id }
+      detail: { id: todoLIST.id }
     });
     this.headlineEvent = new CustomEvent('headlineInputChange', {
       detail: {}
@@ -232,7 +236,7 @@ var TodoList = function () {
       var _this = this;
 
       this.headline.addEventListener('change', function () {
-        _this.headlineEvent.detail.elemLIST = Object.assign({}, _this.elemLIST, { todoListTitle: _this.headline.value });
+        _this.headlineEvent.detail.todoLIST = Object.assign({}, _this.todoLIST, { todoListTitle: _this.headline.value });
         document.dispatchEvent(_this.headlineEvent);
       });
     }

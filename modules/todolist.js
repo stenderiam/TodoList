@@ -5,10 +5,10 @@ import TodoListItem from './todolistitem.js';
 
 export default class TodoList {
 
-  constructor(itemsStorage, elemLIST) {
+  constructor(itemsStorage, todoLIST) {
     this.layout = `
        <div class="todoList-container"> 
-         <input class="headline" type="text" value="">
+         <input class="headline" type="text">
          <input class="delete-button" type="submit" value="delete list">
              
           <div id="add-todo">
@@ -31,11 +31,11 @@ export default class TodoList {
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.remove-List');
     this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
-    this.itemsStorage = JSON.parse(localStorage.getItem(`todolistItems${elemLIST.id}`)) || [];
+    this.itemsStorage = JSON.parse(localStorage.getItem(`todolistItems${todoLIST.id}`)) || [];
     this.todoItems = {}; // new TodoItem(s)
-    this.elemLIST = elemLIST;
+    this.todoLIST = todoLIST;
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: elemLIST.id },
+      detail: { id: todoLIST.id },
     });
     this.headlineEvent = new CustomEvent('headlineInputChange', {
       detail: {},
@@ -54,7 +54,7 @@ export default class TodoList {
 
   headlineChange() {
     this.headline.addEventListener('change', () => {
-      this.headlineEvent.detail.elemLIST = Object.assign({}, this.elemLIST, { todoListTitle: this.headline.value });
+      this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
       document.dispatchEvent(this.headlineEvent);
     });
   }
