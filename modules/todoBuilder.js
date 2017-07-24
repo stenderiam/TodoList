@@ -16,8 +16,6 @@ export default class TodoBuilder {
 
 
 
-
-
   createTodoLIST() {
     this.addLists.addEventListener('click', (e) => {
       e.preventDefault();
@@ -25,7 +23,6 @@ export default class TodoBuilder {
       const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
       const todoLIST = {
         id: maxListId + 1,
-        todoListTitle: '',
       };
       this.ListStorage.push(todoLIST);
       this.saveTodoList();
@@ -36,7 +33,6 @@ export default class TodoBuilder {
 
   headlineChangeEvent() {
     document.addEventListener('headlineInputChange', (e) => {
-      // const todoTitle = this.headline.value;
       const elId = e.detail.todoLIST.id;
       const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
       this.itemsStorage[index] = e.detail.todoLIST;

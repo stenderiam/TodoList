@@ -61,7 +61,7 @@ export default class TodoList {
 
   removeTodoLIST() {
     this.deleteTodo.addEventListener('click', () => {
-      document.dispatchEvent(this.headlineEvent);
+      document.dispatchEvent(this.deleteLISTEvent);
     });
   }
   deleteLIST() {
@@ -71,9 +71,11 @@ export default class TodoList {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
       if (this.inputID.value.length === 0) return;
+      const todoTitle = this.headline.value;
       const title = this.inputID.value;
       const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
       const todoItem = {
+        todoTitle,
         title,
         done: false,
         id: maxId + 1,

@@ -81,8 +81,7 @@ var TodoBuilder = function () {
           return elem.id;
         }))) : 0;
         var todoLIST = {
-          id: maxListId + 1,
-          todoListTitle: ''
+          id: maxListId + 1
         };
         _this.ListStorage.push(todoLIST);
         _this.saveTodoList();
@@ -96,7 +95,6 @@ var TodoBuilder = function () {
       var _this2 = this;
 
       document.addEventListener('headlineInputChange', function (e) {
-        // const todoTitle = this.headline.value;
         var elId = e.detail.todoLIST.id;
         var index = _this2.ListStorage.findIndex(function (todoLIST) {
           return todoLIST.id === elId;
@@ -244,7 +242,7 @@ var TodoList = function () {
       var _this2 = this;
 
       this.deleteTodo.addEventListener('click', function () {
-        document.dispatchEvent(_this2.headlineEvent);
+        document.dispatchEvent(_this2.deleteLISTEvent);
       });
     }
   }, {
@@ -260,11 +258,13 @@ var TodoList = function () {
       this.buttonID.addEventListener('click', function (e) {
         e.preventDefault();
         if (_this3.inputID.value.length === 0) return;
+        var todoTitle = _this3.headline.value;
         var title = _this3.inputID.value;
         var maxId = _this3.itemsStorage.length > 0 ? Math.max.apply(Math, _toConsumableArray(_this3.itemsStorage.map(function (elem) {
           return elem.id;
         }))) : 0;
         var todoItem = {
+          todoTitle: todoTitle,
           title: title,
           done: false,
           id: maxId + 1
