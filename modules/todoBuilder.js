@@ -14,8 +14,6 @@ export default class TodoBuilder {
     this.headlineChangeEvent();
   }
 
-
-
   createTodoLIST() {
     this.addLists.addEventListener('click', (e) => {
       e.preventDefault();
@@ -37,7 +35,6 @@ export default class TodoBuilder {
       console.log('ffff');
       const elId = e.detail.todoLIST.id;
       const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
-
       this.ListStorage[index] = e.detail.todoLIST;
       this.saveTodoList();
       console.log(this.ListStorage);

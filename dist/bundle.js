@@ -101,7 +101,6 @@ var TodoBuilder = function () {
         var index = _this2.ListStorage.findIndex(function (todoLIST) {
           return todoLIST.id === elId;
         });
-
         _this2.ListStorage[index] = e.detail.todoLIST;
         _this2.saveTodoList();
         console.log(_this2.ListStorage);
@@ -196,7 +195,7 @@ var TodoList = function () {
   function TodoList(itemsStorage, todoLIST) {
     _classCallCheck(this, TodoList);
 
-    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text">\n         <input class="delete-button" type="submit" value="delete list">\n             \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
+    this.layout = '\n       <div class="todoList-container"> \n         <input class="headline" type="text" value =" ' + todoLIST.todoListTitle + '"> \n         <input class="delete-button" type="submit" value="delete list">\n             \n          <div id="add-todo">\n            <form class="add-todo">\n                <input class="myinput" type="text" placeholder="Don\'t Forget to..." name="item" required>\n                <input class="button" type="submit" value="+">\n            </form>\n        </div>\n          <ul class="todo-list"></ul>\n          <div class="remove-List">Remove All Items</div>\n        </div>\n    ';
     this.todoListContainer = document.createElement('div');
     this.todoListContainer.innerHTML = this.layout;
     this.container = document.querySelector('.container');
@@ -281,7 +280,7 @@ var TodoList = function () {
   }, {
     key: 'saveTodoItem',
     value: function saveTodoItem() {
-      localStorage.setItem('todolistItems' + this.elemLIST.id, JSON.stringify(this.itemsStorage));
+      localStorage.setItem('todolistItems' + this.todoLIST.id, JSON.stringify(this.itemsStorage));
     }
   }, {
     key: 'createNewTodoItem',
@@ -333,7 +332,7 @@ var TodoList = function () {
     value: function clearList() {
       this.itemsStorage = [];
       this.todoItems = {};
-      localStorage.removeItem('todolistItems' + this.elemLIST.id);
+      localStorage.removeItem('todolistItems' + this.todoLIST.id);
       this.todoList.innerHTML = '';
       this.removeList.classList.add('hidden');
     }

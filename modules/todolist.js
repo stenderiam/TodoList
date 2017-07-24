@@ -8,7 +8,7 @@ export default class TodoList {
   constructor(itemsStorage, todoLIST) {
     this.layout = `
        <div class="todoList-container"> 
-         <input class="headline" type="text">
+         <input class="headline" type="text" value =" ${todoLIST.todoListTitle}"> 
          <input class="delete-button" type="submit" value="delete list">
              
           <div id="add-todo">
@@ -86,7 +86,7 @@ export default class TodoList {
     });
   }
   saveTodoItem() {
-    localStorage.setItem(`todolistItems${this.elemLIST.id}`, JSON.stringify(this.itemsStorage));
+    localStorage.setItem(`todolistItems${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
   }
   createNewTodoItem(todoItem) {
     const todoItemObject = new TodoListItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, todoItem);
@@ -118,7 +118,7 @@ export default class TodoList {
   clearList() {
     this.itemsStorage = [];
     this.todoItems = {};
-    localStorage.removeItem(`todolistItems${this.elemLIST.id}`);
+    localStorage.removeItem(`todolistItems${this.todoLIST.id}`);
     this.todoList.innerHTML = '';
     this.removeList.classList.add('hidden');
   }
