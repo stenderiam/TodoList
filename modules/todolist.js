@@ -5,10 +5,30 @@ import TodoListItem from './todolistitem.js';
 
 export default class TodoList {
 
-  constructor(itemsStorage, todoLIST) {
+  constructor(todoLIST) {
+    this.todoLIST = todoLIST;
+    this.todoItems = {};
+    this.itemsStorage = JSON.parse(localStorage.getItem(`todoListItem${this.todoLIST.id}`)) || [];
+    this.createLayout();
+    this.initTodoList();
+  }
+
+  initTodoList() {
+    this.showItem();
+    this.addNewItem();
+    this.todoCustomEvent();
+    this.deleteItem();
+    this.updateItem();
+    this.clearListOnClick();
+    this.clearTodoOnClick();
+    this.deleteTodoList();
+    this.headlineChange();
+  }
+
+  createLayout() {
     this.layout = `
        <div class="todoList-container"> 
-         <input class="headline" type="text" value =" ${todoLIST.todoListTitle}"> 
+         <input class="headline" type="text" value ="${this.todoLIST.todoListTitle}"> 
          <input class="delete-button" type="submit" value="delete list">
              
           <div id="add-todo">
@@ -31,43 +51,18 @@ export default class TodoList {
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.remove-List');
     this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
-    this.itemsStorage = JSON.parse(localStorage.getItem(`todolistItems${todoLIST.id}`)) || [];
-    this.todoItems = {}; // new TodoItem(s)
-    this.todoLIST = todoLIST;
+  }
+
+  todoCustomEvent() {
     this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: todoLIST.id },
+      detail: { id: this.todoLIST.id },
     });
-    this.headlineEvent = new CustomEvent('headlineInputChange', {
+    this.headlineEvent = new CustomEvent('headlineChange', {
       detail: {},
     });
-    this.init();
-  }
-  init() {
-    this.showCurrentList();
-    this.createTodoItemEvent();
-    this.deleteTodoItemEvent();
-    this.clearListEvent();
-    this.updateTodoItemEvent();
-    this.removeTodoLIST();
-    this.headlineChange();
   }
 
-  headlineChange() {
-    this.headline.addEventListener('change', () => {
-      this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
-      document.dispatchEvent(this.headlineEvent);
-    });
-  }
-
-  removeTodoLIST() {
-    this.deleteTodo.addEventListener('click', () => {
-      document.dispatchEvent(this.deleteLISTEvent);
-    });
-  }
-  deleteLIST() {
-    this.todoListContainer.remove();
-  }
-  createTodoItemEvent() {
+  addNewItem() {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
       if (this.inputID.value.length === 0) return;
@@ -81,50 +76,69 @@ export default class TodoList {
         id: maxId + 1,
       };
       this.itemsStorage.push(todoItem);
-      this.saveTodoItem();
-      this.createNewTodoItem(todoItem);
+      this.saveItem();
+      this.createItem(todoItem);
     });
   }
-  saveTodoItem() {
-    localStorage.setItem(`todolistItems${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
+  saveItem() {
+    localStorage.setItem(`todoListItem${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
   }
-  createNewTodoItem(todoItem) {
-    const todoItemObject = new TodoListItem(this.inputID, this.buttonID, this.todoList, this.itemsStorage, this.removeList, todoItem);
+  createItem(todoItem) {
+    const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
     this.todoItems[todoItem.id] = todoItemObject;
   }
-  showCurrentList() {
+  showItem() {
     this.itemsStorage.forEach((elem) => {
-      this.createNewTodoItem(elem);
+      this.createItem(elem);
     });
   }
-  deleteTodoItemEvent() {
-    document.addEventListener('deleteItem', (e) => {
+  deleteItem() {
+    this.todoListContainer.addEventListener('deleteItem', (e) => {
       const elId = e.detail.id;
       const index = this.itemsStorage.findIndex(elem => elem.id === elId);
       this.itemsStorage.splice(index, 1);
       this.todoItems[elId].deleteItem();
       delete this.todoItems[elId];
-      this.saveTodoItem();
+      this.saveItem();
     });
   }
-  updateTodoItemEvent() {
-    document.addEventListener('updateItem', (e) => {
+  updateItem() {
+    this.todoListContainer.addEventListener('updateItem', (e) => {
       const elId = e.detail.elem.id;
       const index = this.itemsStorage.findIndex(elem => elem.id === elId);
       this.itemsStorage[index] = e.detail.elem;
-      this.saveTodoItem();
+      this.saveItem();
     });
   }
   clearList() {
     this.itemsStorage = [];
     this.todoItems = {};
-    localStorage.removeItem(`todolistItems${this.todoLIST.id}`);
+    localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
     this.todoList.innerHTML = '';
     this.removeList.classList.add('hidden');
   }
-  clearListEvent() {
+  clearListOnClick() {
     this.removeList.addEventListener('click', () => {
       this.clearList();
     });
+  }
+  clearTodoOnClick() {
+    this.deleteTodo.addEventListener('click', () => {
+      this.clearList();
+    });
+  }
+  headlineChange() {
+    this.headline.addEventListener('change', () => {
+      this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
+      document.dispatchEvent(this.headlineEvent);
+    });
+  }
+  deleteTodoList() {
+    this.deleteTodo.addEventListener('click', () => {
+      document.dispatchEvent(this.deleteLISTEvent);
+    });
+  }
+  onDeleteList() {
+    this.todoListContainer.remove();
   }
 }

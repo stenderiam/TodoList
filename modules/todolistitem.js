@@ -1,22 +1,22 @@
 export default class TodoListItem {
 
-  constructor(inputPush, buttonPush, todoListPush, itemsStoragePush, removeList, elem) {
-    this.button = buttonPush;
+  constructor(todoList, todoListContainer, elem) {
     this.elem = elem;
-    this.inputPush = inputPush;
-    this.todoList = todoListPush;
-    this.itemsStorage = itemsStoragePush;
-    this.removeList = removeList;
+    this.todoList = todoList;
+    this.parentContainer = todoListContainer;
+    this.itemCustomEvent();
+    this.createEntry();
+    this.removeItemEvent();
+    this.inputUpdateEvent();
+    this.checkboxUpdateEvent();
+  }
+  itemCustomEvent() {
     this.deleteItemEvent = new CustomEvent('deleteItem', {
-      detail: { id: elem.id },
+      detail: { id: this.elem.id },
     });
     this.updateItemEvent = new CustomEvent('updateItem', {
       detail: {},
     });
-    this.createEntry();
-    this.removeTodoItemEvent();
-    this.inputUpdateEvent();
-    this.checkboxUpdateEvent();
   }
   createEntry() {
     this.createElemLi();
@@ -56,18 +56,18 @@ export default class TodoListItem {
   inputUpdateEvent() {
     this.inputElem.addEventListener('change', () => {
       this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { title: this.inputElem.value });
-      document.dispatchEvent(this.updateItemEvent);
+      this.parentContainer.dispatchEvent(this.updateItemEvent);
     });
   }
   checkboxUpdateEvent() {
     this.checkboxElem.addEventListener('change', () => {
       this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
-      document.dispatchEvent(this.updateItemEvent);
+      this.parentContainer.dispatchEvent(this.updateItemEvent);
     });
   }
-  removeTodoItemEvent() {
+  removeItemEvent() {
     this.deleteButton.addEventListener('click', () => {
-      document.dispatchEvent(this.deleteItemEvent);
+      this.parentContainer.dispatchEvent(this.deleteItemEvent);
     });
   }
 }
