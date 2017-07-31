@@ -28,7 +28,9 @@
     "eslint-plugin-react": "^7.1.0",
     "watchify": "^3.9.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-sass": "^4.5.3"
+  },
   "browserify": {
     "transform": [
       "babelify"

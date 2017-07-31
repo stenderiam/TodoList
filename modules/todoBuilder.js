@@ -2,23 +2,40 @@ import TodoList from './todolist.js';
 
 export default class TodoBuilder {
 
-  constructor(addLists) {
-    this.container = document.querySelector('.container');
-    this.container.insertAdjacentHTML('afterend', addLists);
-    this.addLists = document.querySelector('.add-list');
+  constructor() {
+    this.builderLayout();
     this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
     this.allTodo = {};
     this.initBuilder();
   }
 
   initBuilder() {
-    this.addNewTodo();
+    this.addTodoEvent();
     this.showList();
     this.deleteTodoList();
     this.headlineEvent();
   }
 
-  addNewTodo() {
+  builderLayout() {
+    this.boardHeader = `
+                <div class="toolbar ">
+                  <div class="logo">
+                    ToDo List
+                  </div>
+                </div>
+                <div class="fab">
+                  <button class="fab-button" type="button"><img src="icons/fab.svg" alt="fab icon"></button>
+                </div>
+                <div class="content"></div>
+        `;
+    this.boardContainer = document.createElement('div');
+    this.boardContainer.className = 'app-content';
+    this.boardContainer.innerHTML = this.boardHeader;
+    this.container = document.querySelector('.board-wrapper');
+    this.container.appendChild(this.boardContainer);
+    this.addLists = document.querySelector('.fab');
+  }
+  addTodoEvent() {
     this.addLists.addEventListener('click', (e) => {
       e.preventDefault();
       const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);

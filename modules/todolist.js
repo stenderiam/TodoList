@@ -15,7 +15,7 @@ export default class TodoList {
 
   initTodoList() {
     this.showItem();
-    this.addNewItem();
+    this.addItemEvent();
     this.todoCustomEvent();
     this.deleteItem();
     this.updateItem();
@@ -27,30 +27,43 @@ export default class TodoList {
 
   createLayout() {
     this.layout = `
-       <div class="todoList-container"> 
-         <input class="headline" type="text" value ="${this.todoLIST.todoListTitle}"> 
-         <input class="delete-button" type="submit" value="delete list">
-             
-          <div id="add-todo">
-            <form class="add-todo">
-                <input class="myinput" type="text" placeholder="Don't Forget to..." name="item" required>
-                <input class="button" type="submit" value="+">
-            </form>
+        <form class="card-form" autocomplete="off">
+          <div class="headline">
+            <input class="headline-title" placeholder="Title" value="${this.todoLIST.todoListTitle}">
+          </div>
+          <ul class="todo-list">
+          </ul>
+          <div class="new-item">
+            <div class="item-input">
+              <input class="item-submit" type="submit" alt="Submit" value="+" />
+            </div>
+            <div class="item-text">
+              <input class="item-input--tag add-item" placeholder="Add new todo" value="">
+              <span class="highlight"></span>
+              <span class="bar"></span>
+            </div>
+          </div>
+        </form>
+        <div class="list-button">
+          <div class="clear-list">
+            <button class="delete-button clear " type="button">clear</button>
+          </div>
+          <div class="delete-list">
+            <button class="delete-button delete" type="button">delete</button>
+          </div>
         </div>
-          <ul class="todo-list"></ul>
-          <div class="remove-List">Remove All Items</div>
-        </div>
-    `;
+`;
     this.todoListContainer = document.createElement('div');
+    this.todoListContainer.className = 'card';
     this.todoListContainer.innerHTML = this.layout;
-    this.container = document.querySelector('.container');
-    this.container.appendChild(this.todoListContainer);
-    this.headline = this.todoListContainer.querySelector('.headline');
-    this.inputID = this.todoListContainer.querySelector('.myinput');
-    this.buttonID = this.todoListContainer.querySelector('.button');
+    this.todoFormcontainer = document.querySelector('.content');
+    this.todoFormcontainer.appendChild(this.todoListContainer);
+    this.headline = this.todoListContainer.querySelector('.headline-title');
+    this.inputID = this.todoListContainer.querySelector('.add-item');
+    this.buttonID = this.todoListContainer.querySelector('.item-submit');
     this.todoList = this.todoListContainer.querySelector('.todo-list');
-    this.removeList = this.todoListContainer.querySelector('.remove-List');
-    this.deleteTodo = this.todoListContainer.querySelector('.delete-button');
+    this.removeList = this.todoListContainer.querySelector('.clear');
+    this.deleteTodo = this.todoListContainer.querySelector('.delete');
   }
 
   todoCustomEvent() {
@@ -62,15 +75,13 @@ export default class TodoList {
     });
   }
 
-  addNewItem() {
+  addItemEvent() {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
-      if (this.inputID.value.length === 0) return;
-      const todoTitle = this.headline.value;
+      //  if (this.inputID.value.length === 0) return;
       const title = this.inputID.value;
       const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
       const todoItem = {
-        todoTitle,
         title,
         done: false,
         id: maxId + 1,
@@ -78,6 +89,7 @@ export default class TodoList {
       this.itemsStorage.push(todoItem);
       this.saveItem();
       this.createItem(todoItem);
+      this.inputID.value = '';
     });
   }
   saveItem() {
@@ -86,6 +98,7 @@ export default class TodoList {
   createItem(todoItem) {
     const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
     this.todoItems[todoItem.id] = todoItemObject;
+    this.showDeleteButton();
   }
   showItem() {
     this.itemsStorage.forEach((elem) => {
@@ -115,10 +128,10 @@ export default class TodoList {
     this.todoItems = {};
     localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
     this.todoList.innerHTML = '';
-    this.removeList.classList.add('hidden');
   }
   clearListOnClick() {
     this.removeList.addEventListener('click', () => {
+      this.removeList.classList.remove('button-visible');
       this.clearList();
     });
   }
@@ -140,5 +153,11 @@ export default class TodoList {
   }
   onDeleteList() {
     this.todoListContainer.remove();
+  }
+  showDeleteButton() {
+    if (this.itemsStorage.lenght !== null) {
+      this.removeList.classList.add('button-visible');
+    }
+    console.log(this.itemsStorage);
   }
 }

@@ -9,6 +9,7 @@ export default class TodoListItem {
     this.removeItemEvent();
     this.inputUpdateEvent();
     this.checkboxUpdateEvent();
+    this.isDone();
   }
   itemCustomEvent() {
     this.deleteItemEvent = new CustomEvent('deleteItem', {
@@ -18,35 +19,46 @@ export default class TodoListItem {
       detail: {},
     });
   }
+
   createEntry() {
     this.createElemLi();
     this.createElemCheckbox();
     this.createElemDeleteButton();
     this.createElemInput();
-    this.elemLi.appendChild(this.inputElem);
     this.elemLi.appendChild(this.checkboxElem);
+    this.elemLi.appendChild(this.inputElem);
     this.elemLi.appendChild(this.deleteButton);
     this.todoList.appendChild(this.elemLi);
   }
+
   createElemLi() {
     this.elemLi = document.createElement('li');
-    this.elemLi.className = 'list-content';
+    this.elemLi.className = 'list-item ';
   }
   createElemCheckbox() {
+    this.checkItem = document.createElement('div');
+    this.checkItem.className = 'item-input';
     this.checkboxElem = document.createElement('input');
-    this.checkboxElem.className = 'checkDone';
+    this.checkboxElem.className = 'item-checkbox';
     this.checkboxElem.type = 'checkbox';
+    this.checkItem.appendChild(this.checkboxElem);
     this.checkboxElem.id = `todo${this.elem.id}`;
-    this.checkboxElem.checked = (!!this.elem.done);
+    this.checkboxElem.checked = this.elem.done;
   }
   createElemDeleteButton() {
-    this.deleteButton = document.createElement('div');
-    this.deleteButton.className = 'delete';
-    this.deleteButton.innerHTML = '<span>X</span>';
+    this.deleteDiv = document.createElement('div');
+    this.deleteDiv.className = 'item-buttonn';
+    this.deleteButton = document.createElement('button');
+    this.deleteButton.type = 'button';
+    this.deleteButton.className = 'item-delete';
+    this.deleteDiv.appendChild(this.deleteButton);
+    this.deleteButton.innerHTML = ` <img src="icons/delete.svg" alt="delete icon">`;
   }
   createElemInput() {
+    this.inputItem = document.createElement('div');
+    this.inputItem.className = 'item-text';
     this.inputElem = document.createElement('input');
-    this.inputElem.className = 'one-list-item';
+    this.inputElem.className = 'item-input--tag';
     this.inputElem.type = 'text';
     this.inputElem.value = this.elem.title;
   }
@@ -62,8 +74,17 @@ export default class TodoListItem {
   checkboxUpdateEvent() {
     this.checkboxElem.addEventListener('change', () => {
       this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
+      this.isDone();
       this.parentContainer.dispatchEvent(this.updateItemEvent);
     });
+  }
+
+  isDone() {
+    if (this.checkboxElem.checked) {
+      this.inputElem.classList.add('task-isDone');
+    } else {
+      this.inputElem.classList.remove('task-isDone');
+    }
   }
   removeItemEvent() {
     this.deleteButton.addEventListener('click', () => {
