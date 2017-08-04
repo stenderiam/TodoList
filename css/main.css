@@ -1,5 +1,6 @@
 body {
-  background: #e6e6e6; }
+  background: #e6e6e6;
+  font-weight: 300; }
 
 .toolbar {
   background: #3949ab;
@@ -21,7 +22,7 @@ body {
 .card {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
   background-color: white;
-  margin: 8px;
+  margin: 16px 8px 0 8px;
   width: calc(100vw - 16px); }
 
 .card-form {
@@ -166,6 +167,8 @@ button {
     cursor: pointer;
     overflow: hidden;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4); }
+    button.fab-button:focus:not(:active)::after {
+      animation: ripple 1s ease-out; }
 
 button.delete-button {
   min-width: 64px;
@@ -189,16 +192,33 @@ button.delete-button {
 .list-button {
   display: flex; }
 
+.task-isDone {
+  text-decoration: line-through;
+  color: #c3c3c3; }
+
+.button-visible {
+  display: block; }
+
+@media (min-width: 720px) {
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; }
+  .card {
+    width: calc(32vw - 16px);
+    justify-content: space-between; } }
+
 @media (min-width: 1024px) {
   .content {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row; }
   .card {
-    width: calc(33vw - 16px);
+    width: calc(32vw - 16px);
     justify-content: space-between; } }
 
-@media (min-width: 1400px) {
+@media (min-width: 1440px) {
   .card {
+    height: 100%;
     width: calc(20vw - 16px);
     justify-content: space-between; } }
