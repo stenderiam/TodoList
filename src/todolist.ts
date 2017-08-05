@@ -1,9 +1,38 @@
 // TODO: later, to change current methods to pure fanctions
 
 
+
 // import TodoListItem from './todolistitem.js';
+interface ItodoListType {
+  id: number,
+  todoListTitle?: string
+}
+interface ItodoItemType {
+  title?: string,
+  done?: boolean,
+  id: number
+}
+
 
 export default class TodoList {
+
+  todoItems: any;
+  itemsStorage: any;
+  todoLIST: ItodoListType;
+  layout: string;
+  todoListContainer: HTMLElement;
+  todoFormcontainer: Element;
+  headline: HTMLInputElement;
+  inputID: HTMLInputElement;
+  buttonID: Element;
+  todoList: Element;
+  removeList: Element;
+  deleteTodo: Element;
+  todoItem: ItodoItemType;
+  itemText: Element;
+
+  deleteLISTEvent: CustomEvent;
+  headlineEvent: CustomEvent;
 
   constructor(todoLIST) {
     this.todoLIST = todoLIST;
@@ -38,9 +67,7 @@ export default class TodoList {
               <input class="item-submit" type="submit" alt="Submit" value="+" />
             </div>
             <div class="item-text">
-              <input class="item-input--tag add-item" placeholder="Add new todo" value="">
-              <span class="highlight"></span>
-              <span class="bar"></span>
+            
             </div>
           </div>
         </form>
@@ -58,8 +85,26 @@ export default class TodoList {
     this.todoListContainer.innerHTML = this.layout;
     this.todoFormcontainer = document.querySelector('.content');
     this.todoFormcontainer.appendChild(this.todoListContainer);
-    this.headline = this.todoListContainer.querySelector('.headline-title');
-    this.inputID = this.todoListContainer.querySelector('.add-item');
+    //  this.headline = this.todoListContainer.querySelector('.headline-title');
+    let headline: HTMLInputElement = document.createElement('input');
+    headline.className = 'headline-title';
+    this.headline = headline;
+
+    this.itemText = this.todoListContainer.querySelector('.item-text');
+    let inputID: HTMLInputElement = document.createElement('input');
+    inputID.className = 'item-input--tag add-item';
+    inputID.type = 'text';
+    inputID.value = "";
+    inputID.placeholder = "Add new todo";
+    this.itemText.appendChild(inputID);
+    this.inputID = inputID;
+
+    let highlight: HTMLSpanElement = document.createElement('span');
+    highlight.className = 'highlight';
+    let bar: HTMLSpanElement = document.createElement('span');
+    bar.className = 'bar';
+    this.itemText.appendChild(highlight);
+    this.itemText.appendChild(bar);
     this.buttonID = this.todoListContainer.querySelector('.item-submit');
     this.todoList = this.todoListContainer.querySelector('.todo-list');
     this.removeList = this.todoListContainer.querySelector('.clear');
@@ -79,6 +124,8 @@ export default class TodoList {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
       //  if (this.inputID.value.length === 0) return;
+      //  const title = this.inputID.value;
+      // const title = (<HTMLInputElement>this.todoListContainer.querySelector('.add-item')).value;
       const title = this.inputID.value;
       const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
       const todoItem = {
@@ -96,72 +143,72 @@ export default class TodoList {
     localStorage.setItem(`todoListItem${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
   }
   createItem(todoItem) {
-    import('./todolistitem.ts').then((module) => {
-  const TodoListItem = module.default;
-  const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
-  this.todoItems[todoItem.id] = todoItemObject;
-}); 
-
-}
-
-showItem() {
-  this.itemsStorage.forEach((elem) => {
-    this.createItem(elem);
-  });
-}
-deleteItem() {
-  this.todoListContainer.addEventListener('deleteItem', (e) => {
-    const elId = e.detail.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage.splice(index, 1);
-    this.todoItems[elId].deleteItem();
-    delete this.todoItems[elId];
-    this.saveItem();
-  });
-}
-updateItem() {
-  this.todoListContainer.addEventListener('updateItem', (e) => {
-    const elId = e.detail.elem.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage[index] = e.detail.elem;
-    this.saveItem();
-  });
-}
-clearList() {
-  this.itemsStorage = [];
-  this.todoItems = {};
-  localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
-  this.todoList.innerHTML = '';
-}
-clearListOnClick() {
-  this.removeList.addEventListener('click', () => {
-    this.removeList.classList.remove('button-visible');
-    this.clearList();
-  });
-}
-clearTodoOnClick() {
-  this.deleteTodo.addEventListener('click', () => {
-    this.clearList();
-  });
-}
-headlineChange() {
-  this.headline.addEventListener('change', () => {
-    this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
-    document.dispatchEvent(this.headlineEvent);
-  });
-}
-deleteTodoList() {
-  this.deleteTodo.addEventListener('click', () => {
-    document.dispatchEvent(this.deleteLISTEvent);
-  });
-}
-onDeleteList() {
-  this.todoListContainer.remove();
-}
-showDeleteButton() {
-  if (this.itemsStorage.lenght !== null) {
-    this.removeList.classList.add('button-visible');
+    System.import('./todolistitem.ts').then((module) => {
+      const TodoListItem = module.default;
+      const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
+      this.todoItems[todoItem.id] = todoItemObject;
+    });
   }
-  console.log(this.itemsStorage);
-}
+
+  showItem() {
+    this.itemsStorage.forEach((elem) => {
+      this.createItem(elem);
+    });
+  }
+  deleteItem() {
+    this.todoListContainer.addEventListener('deleteItem', (e: CustomEvent) => {
+      const elId = e.detail.id;
+      const index = this.itemsStorage.findIndex(elem => elem.id === elId);
+      this.itemsStorage.splice(index, 1);
+      this.todoItems[elId].deleteItem();
+      delete this.todoItems[elId];
+      this.saveItem();
+    });
+  }
+  updateItem() {
+    this.todoListContainer.addEventListener('updateItem', (e: CustomEvent) => {
+      const elId = e.detail.elem.id;
+      const index = this.itemsStorage.findIndex(elem => elem.id === elId);
+      this.itemsStorage[index] = e.detail.elem;
+      this.saveItem();
+    });
+  }
+  clearList() {
+    this.itemsStorage = [];
+    this.todoItems = {};
+    localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
+    this.todoList.innerHTML = '';
+  }
+  clearListOnClick() {
+    this.removeList.addEventListener('click', () => {
+      this.removeList.classList.remove('button-visible');
+      this.clearList();
+    });
+  }
+  clearTodoOnClick() {
+    this.deleteTodo.addEventListener('click', () => {
+      this.clearList();
+    });
+  }
+  headlineChange() {
+    this.headline.addEventListener('change', () => {
+      this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
+      document.dispatchEvent(this.headlineEvent);
+    });
+  }
+  deleteTodoList() {
+    this.deleteTodo.addEventListener('click', () => {
+      document.dispatchEvent(this.deleteLISTEvent);
+    });
+  }
+  onDeleteList() {
+    this.todoListContainer.remove();
+  }
+  showDeleteButton() {
+    if (this.itemsStorage.lenght !== null) {
+      this.removeList.classList.add('button-visible');
+    }
+    console.log(this.itemsStorage);
+  }
+
 }

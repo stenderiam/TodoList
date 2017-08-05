@@ -589,290 +589,273 @@ function updateLink (link, options, obj) {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__todoBuilder__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__css_normalize_css__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__css_normalize_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__css_normalize_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scss_main_scss__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scss_main_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__scss_main_scss__);
 
-
-
-
-
-
-new __WEBPACK_IMPORTED_MODULE_0__todoBuilder__["a" /* default */]();
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var todoBuilder_1 = __webpack_require__(4);
+__webpack_require__(6);
+__webpack_require__(9);
+new todoBuilder_1.default();
 
 
 /***/ }),
 /* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__todolist__ = __webpack_require__(5);
 
-
-class TodoBuilder {
-
-  constructor() {
-    this.builderLayout();
-    this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
-    this.allTodo = {};
-    this.initBuilder();
-  }
-
-  initBuilder() {
-    this.addTodoEvent();
-    this.showList();
-    this.deleteTodoList();
-    this.headlineEvent();
-  }
-
-  builderLayout() {
-    this.boardHeader = `
-                <div class="toolbar ">
-                  <div class="logo">
-                    ToDo List
-                  </div>
-                </div>
-                <div class="fab">
-                  <button class="fab-button" type="button"><img src="fab.svg" alt="fab icon"></button>
-                </div>
-                <div class="content"></div>
-        `;
-    this.boardContainer = document.createElement('div');
-    this.boardContainer.className = 'app-content';
-    this.boardContainer.innerHTML = this.boardHeader;
-    this.container = document.querySelector('.board-wrapper');
-    this.container.appendChild(this.boardContainer);
-    this.addLists = document.querySelector('.fab');
-  }
-  addTodoEvent() {
-    this.addLists.addEventListener('click', (e) => {
-      e.preventDefault();
-      const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
-      const todoLIST = {
-        id: maxListId + 1,
-        todoListTitle: '',
-      };
-      this.ListStorage.push(todoLIST);
-      this.saveTodoList();
-      this.createTodoList(todoLIST);
-    });
-  }
-  headlineEvent() {
-    document.addEventListener('headlineChange', (e) => {
-      const elId = e.detail.todoLIST.id;
-      const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
-      this.ListStorage[index] = e.detail.todoLIST;
-      this.saveTodoList();
-    });
-  }
-  saveTodoList() {
-    localStorage.setItem('allTodoStorage', JSON.stringify(this.ListStorage));
-  }
-  showList() {
-    this.ListStorage.forEach((elemLIST) => {
-      this.createTodoList(elemLIST);
-    });
-  }
-  createTodoList(todoLIST) {
-    const todoListObject = new __WEBPACK_IMPORTED_MODULE_0__todolist__["a" /* default */](todoLIST);
-    this.allTodo[todoLIST.id] = todoListObject;
-  }
-  deleteTodoList() {
-    document.addEventListener('deleteLIST', (e) => {
-      const elId = e.detail.id;
-      const index = this.ListStorage.findIndex(elem => elem.id === elId);
-      this.ListStorage.splice(index, 1);
-      this.allTodo[elId].onDeleteList();
-      delete this.allTodo[elId];
-      this.saveTodoList();
-    });
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = TodoBuilder;
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var todolist_1 = __webpack_require__(5);
+/*
+interface ITodoBuilder {
+  // name: string;
+  // lessonCount?: number;
+  allTodo?: any;
+  ListStorage?: any;
+} */
+// export default class TodoBuilder implements ITodoBuilder {
+var TodoBuilder = (function () {
+    function TodoBuilder() {
+        this.builderLayout();
+        this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
+        this.allTodo = {};
+        this.initBuilder();
+    }
+    TodoBuilder.prototype.initBuilder = function () {
+        this.addTodoEvent();
+        this.showList();
+        this.deleteTodoList();
+        this.headlineEvent();
+    };
+    TodoBuilder.prototype.builderLayout = function () {
+        this.boardHeader = "\n                <div class=\"toolbar \">\n                  <div class=\"logo\">\n                    ToDo List\n                  </div>\n                </div>\n                <div class=\"fab\">\n                  <button class=\"fab-button\" type=\"button\"><img src=\"fab.svg\" alt=\"fab icon\"></button>\n                </div>\n                <div class=\"content\"></div>\n        ";
+        this.boardContainer = document.createElement('div');
+        this.boardContainer.className = 'app-content';
+        this.boardContainer.innerHTML = this.boardHeader;
+        this.container = document.querySelector('.board-wrapper');
+        this.container.appendChild(this.boardContainer);
+        this.addLists = document.querySelector('.fab');
+    };
+    TodoBuilder.prototype.addTodoEvent = function () {
+        var _this = this;
+        this.addLists.addEventListener('click', function (e) {
+            e.preventDefault();
+            var maxListId = (_this.ListStorage.length > 0 ? Math.max.apply(Math, _this.ListStorage.map(function (elem) { return elem.id; })) : 0);
+            var todoLIST = {
+                id: maxListId + 1,
+                todoListTitle: '',
+            };
+            _this.ListStorage.push(todoLIST);
+            _this.saveTodoList();
+            _this.createTodoList(todoLIST);
+        });
+    };
+    TodoBuilder.prototype.headlineEvent = function () {
+        var _this = this;
+        document.addEventListener('headlineChange', function (e) {
+            var elId = e.detail.todoLIST.id;
+            var index = _this.ListStorage.findIndex(function (todoLIST) { return todoLIST.id === elId; });
+            _this.ListStorage[index] = e.detail.todoLIST;
+            _this.saveTodoList();
+        });
+    };
+    TodoBuilder.prototype.saveTodoList = function () {
+        localStorage.setItem('allTodoStorage', JSON.stringify(this.ListStorage));
+    };
+    TodoBuilder.prototype.showList = function () {
+        var _this = this;
+        this.ListStorage.forEach(function (elemLIST) {
+            _this.createTodoList(elemLIST);
+        });
+    };
+    TodoBuilder.prototype.createTodoList = function (todoLIST) {
+        var todoListObject = new todolist_1.default(todoLIST);
+        this.allTodo[todoLIST.id] = todoListObject;
+    };
+    TodoBuilder.prototype.deleteTodoList = function () {
+        var _this = this;
+        document.addEventListener('deleteLIST', function (e) {
+            var elId = e.detail.id;
+            var index = _this.ListStorage.findIndex(function (elem) { return elem.id === elId; });
+            _this.ListStorage.splice(index, 1);
+            _this.allTodo[elId].onDeleteList();
+            delete _this.allTodo[elId];
+            _this.saveTodoList();
+        });
+    };
+    return TodoBuilder;
+}());
+exports.default = TodoBuilder;
 
 
 /***/ }),
 /* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
 // TODO: later, to change current methods to pure fanctions
-
-
-// import TodoListItem from './todolistitem.js';
-
-class TodoList {
-
-  constructor(todoLIST) {
-    this.todoLIST = todoLIST;
-    this.todoItems = {};
-    this.itemsStorage = JSON.parse(localStorage.getItem(`todoListItem${this.todoLIST.id}`)) || [];
-    this.createLayout();
-    this.initTodoList();
-  }
-
-  initTodoList() {
-    this.showItem();
-    this.addItemEvent();
-    this.todoCustomEvent();
-    this.deleteItem();
-    this.updateItem();
-    this.clearListOnClick();
-    this.clearTodoOnClick();
-    this.deleteTodoList();
-    this.headlineChange();
-  }
-
-  createLayout() {
-    this.layout = `
-        <form class="card-form" autocomplete="off">
-          <div class="headline">
-            <input class="headline-title" placeholder="Title" value="${this.todoLIST.todoListTitle}">
-          </div>
-          <ul class="todo-list">
-          </ul>
-          <div class="new-item">
-            <div class="item-input">
-              <input class="item-submit" type="submit" alt="Submit" value="+" />
-            </div>
-            <div class="item-text">
-              <input class="item-input--tag add-item" placeholder="Add new todo" value="">
-              <span class="highlight"></span>
-              <span class="bar"></span>
-            </div>
-          </div>
-        </form>
-        <div class="list-button">
-          <div class="clear-list">
-            <button class="delete-button clear " type="button">clear</button>
-          </div>
-          <div class="delete-list">
-            <button class="delete-button delete" type="button">delete</button>
-          </div>
-        </div>
-`;
-    this.todoListContainer = document.createElement('div');
-    this.todoListContainer.className = 'card';
-    this.todoListContainer.innerHTML = this.layout;
-    this.todoFormcontainer = document.querySelector('.content');
-    this.todoFormcontainer.appendChild(this.todoListContainer);
-    this.headline = this.todoListContainer.querySelector('.headline-title');
-    this.inputID = this.todoListContainer.querySelector('.add-item');
-    this.buttonID = this.todoListContainer.querySelector('.item-submit');
-    this.todoList = this.todoListContainer.querySelector('.todo-list');
-    this.removeList = this.todoListContainer.querySelector('.clear');
-    this.deleteTodo = this.todoListContainer.querySelector('.delete');
-  }
-
-  todoCustomEvent() {
-    this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: this.todoLIST.id },
-    });
-    this.headlineEvent = new CustomEvent('headlineChange', {
-      detail: {},
-    });
-  }
-
-  addItemEvent() {
-    this.buttonID.addEventListener('click', (e) => {
-      e.preventDefault();
-      //  if (this.inputID.value.length === 0) return;
-      const title = this.inputID.value;
-      const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
-      const todoItem = {
-        title,
-        done: false,
-        id: maxId + 1,
-      };
-      this.itemsStorage.push(todoItem);
-      this.saveItem();
-      this.createItem(todoItem);
-      this.inputID.value = '';
-    });
-  }
-  saveItem() {
-    localStorage.setItem(`todoListItem${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
-  }
-  createItem(todoItem) {
-    __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 0)).then((module) => {
-  const TodoListItem = module.default;
-  const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
-  this.todoItems[todoItem.id] = todoItemObject;
-}); 
-
-}
-
-showItem() {
-  this.itemsStorage.forEach((elem) => {
-    this.createItem(elem);
-  });
-}
-deleteItem() {
-  this.todoListContainer.addEventListener('deleteItem', (e) => {
-    const elId = e.detail.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage.splice(index, 1);
-    this.todoItems[elId].deleteItem();
-    delete this.todoItems[elId];
-    this.saveItem();
-  });
-}
-updateItem() {
-  this.todoListContainer.addEventListener('updateItem', (e) => {
-    const elId = e.detail.elem.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage[index] = e.detail.elem;
-    this.saveItem();
-  });
-}
-clearList() {
-  this.itemsStorage = [];
-  this.todoItems = {};
-  localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
-  this.todoList.innerHTML = '';
-}
-clearListOnClick() {
-  this.removeList.addEventListener('click', () => {
-    this.removeList.classList.remove('button-visible');
-    this.clearList();
-  });
-}
-clearTodoOnClick() {
-  this.deleteTodo.addEventListener('click', () => {
-    this.clearList();
-  });
-}
-headlineChange() {
-  this.headline.addEventListener('change', () => {
-    this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
-    document.dispatchEvent(this.headlineEvent);
-  });
-}
-deleteTodoList() {
-  this.deleteTodo.addEventListener('click', () => {
-    document.dispatchEvent(this.deleteLISTEvent);
-  });
-}
-onDeleteList() {
-  this.todoListContainer.remove();
-}
-showDeleteButton() {
-  if (this.itemsStorage.lenght !== null) {
-    this.removeList.classList.add('button-visible');
-  }
-  console.log(this.itemsStorage);
-}
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = TodoList;
-
+Object.defineProperty(exports, "__esModule", { value: true });
+var TodoList = (function () {
+    function TodoList(todoLIST) {
+        this.todoLIST = todoLIST;
+        this.todoItems = {};
+        this.itemsStorage = JSON.parse(localStorage.getItem("todoListItem" + this.todoLIST.id)) || [];
+        this.createLayout();
+        this.initTodoList();
+    }
+    TodoList.prototype.initTodoList = function () {
+        this.showItem();
+        this.addItemEvent();
+        this.todoCustomEvent();
+        this.deleteItem();
+        this.updateItem();
+        this.clearListOnClick();
+        this.clearTodoOnClick();
+        this.deleteTodoList();
+        this.headlineChange();
+    };
+    TodoList.prototype.createLayout = function () {
+        this.layout = "\n        <form class=\"card-form\" autocomplete=\"off\">\n          <div class=\"headline\">\n            <input class=\"headline-title\" placeholder=\"Title\" value=\"" + this.todoLIST.todoListTitle + "\">\n          </div>\n          <ul class=\"todo-list\">\n          </ul>\n          <div class=\"new-item\">\n            <div class=\"item-input\">\n              <input class=\"item-submit\" type=\"submit\" alt=\"Submit\" value=\"+\" />\n            </div>\n            <div class=\"item-text\">\n            \n            </div>\n          </div>\n        </form>\n        <div class=\"list-button\">\n          <div class=\"clear-list\">\n            <button class=\"delete-button clear \" type=\"button\">clear</button>\n          </div>\n          <div class=\"delete-list\">\n            <button class=\"delete-button delete\" type=\"button\">delete</button>\n          </div>\n        </div>\n";
+        this.todoListContainer = document.createElement('div');
+        this.todoListContainer.className = 'card';
+        this.todoListContainer.innerHTML = this.layout;
+        this.todoFormcontainer = document.querySelector('.content');
+        this.todoFormcontainer.appendChild(this.todoListContainer);
+        //  this.headline = this.todoListContainer.querySelector('.headline-title');
+        var headline = document.createElement('input');
+        headline.className = 'headline-title';
+        this.headline = headline;
+        this.itemText = this.todoListContainer.querySelector('.item-text');
+        var inputID = document.createElement('input');
+        inputID.className = 'item-input--tag add-item';
+        inputID.type = 'text';
+        inputID.value = "";
+        inputID.placeholder = "Add new todo";
+        this.itemText.appendChild(inputID);
+        this.inputID = inputID;
+        var highlight = document.createElement('span');
+        highlight.className = 'highlight';
+        var bar = document.createElement('span');
+        bar.className = 'bar';
+        this.itemText.appendChild(highlight);
+        this.itemText.appendChild(bar);
+        this.buttonID = this.todoListContainer.querySelector('.item-submit');
+        this.todoList = this.todoListContainer.querySelector('.todo-list');
+        this.removeList = this.todoListContainer.querySelector('.clear');
+        this.deleteTodo = this.todoListContainer.querySelector('.delete');
+    };
+    TodoList.prototype.todoCustomEvent = function () {
+        this.deleteLISTEvent = new CustomEvent('deleteLIST', {
+            detail: { id: this.todoLIST.id },
+        });
+        this.headlineEvent = new CustomEvent('headlineChange', {
+            detail: {},
+        });
+    };
+    TodoList.prototype.addItemEvent = function () {
+        var _this = this;
+        this.buttonID.addEventListener('click', function (e) {
+            e.preventDefault();
+            //  if (this.inputID.value.length === 0) return;
+            //  const title = this.inputID.value;
+            // const title = (<HTMLInputElement>this.todoListContainer.querySelector('.add-item')).value;
+            var title = _this.inputID.value;
+            var maxId = (_this.itemsStorage.length > 0 ? Math.max.apply(Math, _this.itemsStorage.map(function (elem) { return elem.id; })) : 0);
+            var todoItem = {
+                title: title,
+                done: false,
+                id: maxId + 1,
+            };
+            _this.itemsStorage.push(todoItem);
+            _this.saveItem();
+            _this.createItem(todoItem);
+            _this.inputID.value = '';
+        });
+    };
+    TodoList.prototype.saveItem = function () {
+        localStorage.setItem("todoListItem" + this.todoLIST.id, JSON.stringify(this.itemsStorage));
+    };
+    TodoList.prototype.createItem = function (todoItem) {
+        var _this = this;
+        __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 0)).then(function (module) {
+            var TodoListItem = module.default;
+            var todoItemObject = new TodoListItem(_this.todoList, _this.todoListContainer, todoItem);
+            _this.todoItems[todoItem.id] = todoItemObject;
+        });
+    };
+    TodoList.prototype.showItem = function () {
+        var _this = this;
+        this.itemsStorage.forEach(function (elem) {
+            _this.createItem(elem);
+        });
+    };
+    TodoList.prototype.deleteItem = function () {
+        var _this = this;
+        this.todoListContainer.addEventListener('deleteItem', function (e) {
+            var elId = e.detail.id;
+            var index = _this.itemsStorage.findIndex(function (elem) { return elem.id === elId; });
+            _this.itemsStorage.splice(index, 1);
+            _this.todoItems[elId].deleteItem();
+            delete _this.todoItems[elId];
+            _this.saveItem();
+        });
+    };
+    TodoList.prototype.updateItem = function () {
+        var _this = this;
+        this.todoListContainer.addEventListener('updateItem', function (e) {
+            var elId = e.detail.elem.id;
+            var index = _this.itemsStorage.findIndex(function (elem) { return elem.id === elId; });
+            _this.itemsStorage[index] = e.detail.elem;
+            _this.saveItem();
+        });
+    };
+    TodoList.prototype.clearList = function () {
+        this.itemsStorage = [];
+        this.todoItems = {};
+        localStorage.removeItem("todoListItem" + this.todoLIST.id);
+        this.todoList.innerHTML = '';
+    };
+    TodoList.prototype.clearListOnClick = function () {
+        var _this = this;
+        this.removeList.addEventListener('click', function () {
+            _this.removeList.classList.remove('button-visible');
+            _this.clearList();
+        });
+    };
+    TodoList.prototype.clearTodoOnClick = function () {
+        var _this = this;
+        this.deleteTodo.addEventListener('click', function () {
+            _this.clearList();
+        });
+    };
+    TodoList.prototype.headlineChange = function () {
+        var _this = this;
+        this.headline.addEventListener('change', function () {
+            _this.headlineEvent.detail.todoLIST = Object.assign({}, _this.todoLIST, { todoListTitle: _this.headline.value });
+            document.dispatchEvent(_this.headlineEvent);
+        });
+    };
+    TodoList.prototype.deleteTodoList = function () {
+        var _this = this;
+        this.deleteTodo.addEventListener('click', function () {
+            document.dispatchEvent(_this.deleteLISTEvent);
+        });
+    };
+    TodoList.prototype.onDeleteList = function () {
+        this.todoListContainer.remove();
+    };
+    TodoList.prototype.showDeleteButton = function () {
+        if (this.itemsStorage.lenght !== null) {
+            this.removeList.classList.add('button-visible');
+        }
+        console.log(this.itemsStorage);
+    };
+    return TodoList;
+}());
+exports.default = TodoList;
 
 
 /***/ }),

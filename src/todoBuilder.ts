@@ -1,8 +1,59 @@
 
 import TodoList from './todolist';
+/*
+interface ITodoBuilder {
+  // name: string;
+  // lessonCount?: number;
+  allTodo?: any;
+  ListStorage?: any;
+} */
+
+// export default class TodoBuilder implements ITodoBuilder {
 export default class TodoBuilder {
+  /*
+  let course : {name:string} = {
+      name: 'Components'
+  }; 
+  let course : Course = {
+    name: 'Components'
+};
+  interface SquareConfig {
+    color?: string;
+    width?: number;
+}
+
+interface SquareConfig {
+    color?: string;
+    width?: number;
+    [propName: string]: any;
+}
+
+class Greeter {
+    greeting: string;
+    constructor(message: string) {
+        this.greeting = message;
+    }
+    greet() {
+        return "Hello, " + this.greeting;
+    }
+}
+  interface NumberDictionary {
+    [index: string]: number;
+    length: number;    // ok, length is a number
+    name: string;      // error, the type of 'name' is not a subtype of the indexer
+}
+  */
+  ListStorage: any;
+  allTodo: any;
+  boardHeader: string;
+  boardContainer: HTMLElement;
+  container: Element;
+  addLists: Element;
+
 
   constructor() {
+
+
     this.builderLayout();
     this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
     this.allTodo = {};
@@ -49,7 +100,7 @@ export default class TodoBuilder {
     });
   }
   headlineEvent() {
-    document.addEventListener('headlineChange', (e) => {
+    document.addEventListener('headlineChange', (e: CustomEvent) => {
       const elId = e.detail.todoLIST.id;
       const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
       this.ListStorage[index] = e.detail.todoLIST;
@@ -69,7 +120,7 @@ export default class TodoBuilder {
     this.allTodo[todoLIST.id] = todoListObject;
   }
   deleteTodoList() {
-    document.addEventListener('deleteLIST', (e) => {
+    document.addEventListener('deleteLIST', (e: CustomEvent) => {
       const elId = e.detail.id;
       const index = this.ListStorage.findIndex(elem => elem.id === elId);
       this.ListStorage.splice(index, 1);
