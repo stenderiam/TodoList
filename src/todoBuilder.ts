@@ -1,5 +1,6 @@
 
 import TodoList from './todolist';
+let fab = require('../icons/fab.svg');
 /*
 interface ITodoBuilder {
   // name: string;
@@ -75,7 +76,7 @@ class Greeter {
                   </div>
                 </div>
                 <div class="fab">
-                  <button class="fab-button" type="button"><img src="fab.svg" alt="fab icon"></button>
+                  <button class="fab-button" type="button"><img src="${fab}" alt="fab icon"></button>
                 </div>
                 <div class="content"></div>
         `;

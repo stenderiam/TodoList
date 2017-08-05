@@ -143,72 +143,72 @@ export default class TodoList {
     localStorage.setItem(`todoListItem${this.todoLIST.id}`, JSON.stringify(this.itemsStorage));
   }
   createItem(todoItem) {
-    System.import('./todolistitem.ts').then((module) => {
-      const TodoListItem = module.default;
-      const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
-      this.todoItems[todoItem.id] = todoItemObject;
-    });
+    import('./todolistitem.ts').then((module) => {
+  const TodoListItem = module.default;
+  const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
+  this.todoItems[todoItem.id] = todoItemObject;
+});
   }
 
-  showItem() {
-    this.itemsStorage.forEach((elem) => {
-      this.createItem(elem);
-    });
+showItem() {
+  this.itemsStorage.forEach((elem) => {
+    this.createItem(elem);
+  });
+}
+deleteItem() {
+  this.todoListContainer.addEventListener('deleteItem', (e: CustomEvent) => {
+    const elId = e.detail.id;
+    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
+    this.itemsStorage.splice(index, 1);
+    this.todoItems[elId].deleteItem();
+    delete this.todoItems[elId];
+    this.saveItem();
+  });
+}
+updateItem() {
+  this.todoListContainer.addEventListener('updateItem', (e: CustomEvent) => {
+    const elId = e.detail.elem.id;
+    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
+    this.itemsStorage[index] = e.detail.elem;
+    this.saveItem();
+  });
+}
+clearList() {
+  this.itemsStorage = [];
+  this.todoItems = {};
+  localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
+  this.todoList.innerHTML = '';
+}
+clearListOnClick() {
+  this.removeList.addEventListener('click', () => {
+    this.removeList.classList.remove('button-visible');
+    this.clearList();
+  });
+}
+clearTodoOnClick() {
+  this.deleteTodo.addEventListener('click', () => {
+    this.clearList();
+  });
+}
+headlineChange() {
+  this.headline.addEventListener('change', () => {
+    this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
+    document.dispatchEvent(this.headlineEvent);
+  });
+}
+deleteTodoList() {
+  this.deleteTodo.addEventListener('click', () => {
+    document.dispatchEvent(this.deleteLISTEvent);
+  });
+}
+onDeleteList() {
+  this.todoListContainer.remove();
+}
+showDeleteButton() {
+  if (this.itemsStorage.lenght !== null) {
+    this.removeList.classList.add('button-visible');
   }
-  deleteItem() {
-    this.todoListContainer.addEventListener('deleteItem', (e: CustomEvent) => {
-      const elId = e.detail.id;
-      const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-      this.itemsStorage.splice(index, 1);
-      this.todoItems[elId].deleteItem();
-      delete this.todoItems[elId];
-      this.saveItem();
-    });
-  }
-  updateItem() {
-    this.todoListContainer.addEventListener('updateItem', (e: CustomEvent) => {
-      const elId = e.detail.elem.id;
-      const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-      this.itemsStorage[index] = e.detail.elem;
-      this.saveItem();
-    });
-  }
-  clearList() {
-    this.itemsStorage = [];
-    this.todoItems = {};
-    localStorage.removeItem(`todoListItem${this.todoLIST.id}`);
-    this.todoList.innerHTML = '';
-  }
-  clearListOnClick() {
-    this.removeList.addEventListener('click', () => {
-      this.removeList.classList.remove('button-visible');
-      this.clearList();
-    });
-  }
-  clearTodoOnClick() {
-    this.deleteTodo.addEventListener('click', () => {
-      this.clearList();
-    });
-  }
-  headlineChange() {
-    this.headline.addEventListener('change', () => {
-      this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
-      document.dispatchEvent(this.headlineEvent);
-    });
-  }
-  deleteTodoList() {
-    this.deleteTodo.addEventListener('click', () => {
-      document.dispatchEvent(this.deleteLISTEvent);
-    });
-  }
-  onDeleteList() {
-    this.todoListContainer.remove();
-  }
-  showDeleteButton() {
-    if (this.itemsStorage.lenght !== null) {
-      this.removeList.classList.add('button-visible');
-    }
-    console.log(this.itemsStorage);
-  }
+  console.log(this.itemsStorage);
+}
 
 }

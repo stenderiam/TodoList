@@ -1,4 +1,5 @@
-import deletesvg from '../icons/deletesvg.svg'
+
+let deletesvg = require('../icons/deletesvg.svg');
 
 interface ItodoItemType {
   title?: string,
@@ -85,7 +86,8 @@ export default class TodoListItem {
     deleteButton.type = 'button';
     deleteButton.className = 'item-delete';
     deleteDiv.appendChild(deleteButton);
-    deleteButton.innerHTML = ` <img src="deletesvg" alt="delete icon">`;
+
+    deleteButton.innerHTML = ` <img src="${deletesvg}" alt="delete icon">`;
     this.deleteButton = deleteButton;
     /*  this.deleteDiv = document.createElement('div');
       this.deleteDiv.className = 'item-buttonn';
