@@ -69,7 +69,7 @@ var TodoListItem = (function () {
         deleteButton.type = 'button';
         deleteButton.className = 'item-delete';
         deleteDiv.appendChild(deleteButton);
-        deleteButton.innerHTML = " <img class=\"delete-img\" alt=\"delete icon\">";
+        deleteButton.innerHTML = " <img src=\"deletesvg\" alt=\"delete icon\">";
         this.deleteButton = deleteButton;
         /*  this.deleteDiv = document.createElement('div');
           this.deleteDiv.className = 'item-buttonn';

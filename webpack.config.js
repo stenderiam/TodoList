@@ -45,7 +45,24 @@ module.exports = {
         test: /\.scss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-
+      {
+        test: /\.(jpg|png|gif|svg)$/,
+        loaders: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            query: {
+              progressive: true,
+              optimizationLevel: 7,
+              interlaced: false,
+              pngquant: {
+                quality: '65-90',
+                speed: 4,
+              },
+            },
+          },
+        ],
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
