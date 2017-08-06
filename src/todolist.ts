@@ -38,14 +38,14 @@ export default class TodoList {
 
   initTodoList() {
     this.showItem();
-    this.addItemEvent();
+    this.initItemEvent();
     this.todoCustomEvent();
-    this.deleteItem();
-    this.updateItem();
+    this.deleteItemEvent();
+    this.updateItemEvent();
     this.clearListOnClick();
     this.clearTodoOnClick();
-    this.deleteTodoList();
-    this.headlineChange();
+    this.deleteTodoListEvent();
+    this.headlineChangeEvent();
   }
 
 
@@ -144,7 +144,7 @@ export default class TodoList {
     });
   }
 
-  addItemEvent() {
+  initItemEvent() {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
       if (this.inputID.value.length === 0) return;
@@ -162,7 +162,7 @@ export default class TodoList {
     });
   }
   saveItem(todoLIST: ItodoListType) {
-    localStorage.setItem(`todoListItem${todoLIST.id}`, JSON.stringify(this.itemsStorage));
+    return localStorage.setItem(`todoListItem${todoLIST.id}`, JSON.stringify(this.itemsStorage));
   }
 
   createItem(todoItem: ItodoItemType) {
@@ -179,7 +179,7 @@ export default class TodoList {
       this.createItem(elem);
     });
   }
-  deleteItem() {
+  deleteItemEvent() {
     this.todoList.addEventListener('deleteItem', (e: CustomEvent) => {
       const elId = e.detail.id;
       const index = this.itemsStorage.findIndex(elem => elem.id === elId);
@@ -189,7 +189,7 @@ export default class TodoList {
       this.saveItem(this.todoLIST);
     });
   }
-  updateItem() {
+  updateItemEvent() {
     this.todoList.addEventListener('updateItem', (e: CustomEvent) => {
       const elId = e.detail.elem.id;
       const index = this.itemsStorage.findIndex(elem => elem.id === elId);
@@ -198,11 +198,6 @@ export default class TodoList {
     });
   }
 
-  test() {
-    this.inputID.addEventListener('focus', () => {
-      this.inputID.classList.add('test');
-    });
-  }
   clearList(todoLIST: ItodoListType) {
     this.itemsStorage = [];
     this.todoItems = {};
@@ -220,25 +215,19 @@ export default class TodoList {
       this.clearList(this.todoLIST);
     });
   }
-  headlineChange() {
+  headlineChangeEvent() {
     this.headline.addEventListener('change', () => {
       this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
       document.dispatchEvent(this.headlineEvent);
     });
   }
 
-  deleteTodoList() {
+  deleteTodoListEvent() {
     this.deleteTodo.addEventListener('click', () => {
       document.dispatchEvent(this.deleteLISTEvent);
     });
   }
   onDeleteList() {
     this.todoListContainer.remove();
-  }
-  showDeleteButton() {
-    if (this.itemsStorage.lenght !== null) {
-      this.removeList.classList.add('button-visible');
-    }
-    console.log(this.itemsStorage);
   }
 }

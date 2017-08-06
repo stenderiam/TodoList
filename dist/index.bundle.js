@@ -711,14 +711,14 @@ var TodoList = (function () {
     };
     TodoList.prototype.initTodoList = function () {
         this.showItem();
-        this.addItemEvent();
+        this.initItemEvent();
         this.todoCustomEvent();
-        this.deleteItem();
-        this.updateItem();
+        this.deleteItemEvent();
+        this.updateItemEvent();
         this.clearListOnClick();
         this.clearTodoOnClick();
-        this.deleteTodoList();
-        this.headlineChange();
+        this.deleteTodoListEvent();
+        this.headlineChangeEvent();
     };
     TodoList.prototype.createTodoContainer = function () {
         this.layout = "<form class=\"card-form\" autocomplete=\"off\">\n          <div class=\"headline\">          \n          </div>\n          <ul class=\"todo-list\">\n          </ul>\n          <div class=\"new-item\">\n            <div class=\"item-input\">            \n            </div>\n            <div class=\"item-text\">    \n            </div>\n          </div>\n        </form>\n        <div class=\"list-button\">\n          <div class=\"clear-list\">           \n          </div>\n          <div class=\"delete-list\">       \n          </div>\n        </div>";
@@ -791,7 +791,7 @@ var TodoList = (function () {
             detail: {},
         });
     };
-    TodoList.prototype.addItemEvent = function () {
+    TodoList.prototype.initItemEvent = function () {
         var _this = this;
         this.buttonID.addEventListener('click', function (e) {
             e.preventDefault();
@@ -811,7 +811,7 @@ var TodoList = (function () {
         });
     };
     TodoList.prototype.saveItem = function (todoLIST) {
-        localStorage.setItem("todoListItem" + todoLIST.id, JSON.stringify(this.itemsStorage));
+        return localStorage.setItem("todoListItem" + todoLIST.id, JSON.stringify(this.itemsStorage));
     };
     TodoList.prototype.createItem = function (todoItem) {
         var _this = this;
@@ -827,7 +827,7 @@ var TodoList = (function () {
             _this.createItem(elem);
         });
     };
-    TodoList.prototype.deleteItem = function () {
+    TodoList.prototype.deleteItemEvent = function () {
         var _this = this;
         this.todoList.addEventListener('deleteItem', function (e) {
             var elId = e.detail.id;
@@ -838,19 +838,13 @@ var TodoList = (function () {
             _this.saveItem(_this.todoLIST);
         });
     };
-    TodoList.prototype.updateItem = function () {
+    TodoList.prototype.updateItemEvent = function () {
         var _this = this;
         this.todoList.addEventListener('updateItem', function (e) {
             var elId = e.detail.elem.id;
             var index = _this.itemsStorage.findIndex(function (elem) { return elem.id === elId; });
             _this.itemsStorage[index] = e.detail.elem;
             _this.saveItem(_this.todoLIST);
-        });
-    };
-    TodoList.prototype.test = function () {
-        var _this = this;
-        this.inputID.addEventListener('focus', function () {
-            _this.inputID.classList.add('test');
         });
     };
     TodoList.prototype.clearList = function (todoLIST) {
@@ -872,14 +866,14 @@ var TodoList = (function () {
             _this.clearList(_this.todoLIST);
         });
     };
-    TodoList.prototype.headlineChange = function () {
+    TodoList.prototype.headlineChangeEvent = function () {
         var _this = this;
         this.headline.addEventListener('change', function () {
             _this.headlineEvent.detail.todoLIST = Object.assign({}, _this.todoLIST, { todoListTitle: _this.headline.value });
             document.dispatchEvent(_this.headlineEvent);
         });
     };
-    TodoList.prototype.deleteTodoList = function () {
+    TodoList.prototype.deleteTodoListEvent = function () {
         var _this = this;
         this.deleteTodo.addEventListener('click', function () {
             document.dispatchEvent(_this.deleteLISTEvent);
@@ -887,12 +881,6 @@ var TodoList = (function () {
     };
     TodoList.prototype.onDeleteList = function () {
         this.todoListContainer.remove();
-    };
-    TodoList.prototype.showDeleteButton = function () {
-        if (this.itemsStorage.lenght !== null) {
-            this.removeList.classList.add('button-visible');
-        }
-        console.log(this.itemsStorage);
     };
     return TodoList;
 }());

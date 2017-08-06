@@ -10,16 +10,12 @@ var TodoListItem = (function () {
     function TodoListItem(todoList, elem) {
         this.elem = elem;
         this.todoList = todoList;
-        //  this.parentContainer = todoListContainer;
         this.itemCustomEvent();
         this.createEntry();
         this.removeItemEvent();
-        //  this.inputUpdateEvent();
-        //   this.checkboxUpdateEvent();
         this.checkHandler = this.checkHandler.bind(this);
         this.inputHandler = this.inputHandler.bind(this);
-        //this.onRemove = this.onRemove.bind(this); 
-        this.createEntryEvents();
+        this.initUpdateEvents();
         this.isDone();
     }
     TodoListItem.prototype.itemCustomEvent = function () {
@@ -78,7 +74,7 @@ var TodoListItem = (function () {
     TodoListItem.prototype.deleteItem = function () {
         this.elemLi.remove();
     };
-    TodoListItem.prototype.createEntryEvents = function () {
+    TodoListItem.prototype.initUpdateEvents = function () {
         this.checkboxElem.addEventListener('change', this.checkHandler);
         this.inputElem.addEventListener('change', this.inputHandler);
     };

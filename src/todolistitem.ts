@@ -6,7 +6,6 @@ export default class TodoListItem {
 
   elem: ItodoItemType;
   todoList: HTMLUListElement;
-  //  parentContainer: HTMLElement;
   elemLi: HTMLLIElement;
   checkboxElem: HTMLInputElement;
   inputElem: HTMLInputElement;
@@ -17,16 +16,12 @@ export default class TodoListItem {
   constructor(todoList: HTMLUListElement, elem: ItodoItemType) {
     this.elem = elem;
     this.todoList = todoList;
-    //  this.parentContainer = todoListContainer;
     this.itemCustomEvent();
     this.createEntry();
     this.removeItemEvent();
-    //  this.inputUpdateEvent();
-    //   this.checkboxUpdateEvent();
     this.checkHandler = this.checkHandler.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
-    //this.onRemove = this.onRemove.bind(this); 
-    this.createEntryEvents();
+    this.initUpdateEvents();
     this.isDone();
   }
   itemCustomEvent() {
@@ -90,7 +85,7 @@ export default class TodoListItem {
     this.elemLi.remove();
   }
 
-  createEntryEvents() {
+  initUpdateEvents() {
     this.checkboxElem.addEventListener('change', this.checkHandler);
     this.inputElem.addEventListener('change', this.inputHandler);
   }
