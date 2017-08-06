@@ -1,21 +1,24 @@
-webpackJsonp([2,1],[
+webpackJsonp([0,2],[
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var deletesvg = __webpack_require__(1);
+var deletesvg = __webpack_require__(3);
 var TodoListItem = (function () {
-    function TodoListItem(todoList, todoListContainer, elem) {
+    function TodoListItem(todoList, elem) {
         this.elem = elem;
         this.todoList = todoList;
-        this.parentContainer = todoListContainer;
+        //  this.parentContainer = todoListContainer;
         this.itemCustomEvent();
         this.createEntry();
         this.removeItemEvent();
         this.inputUpdateEvent();
-        this.checkboxUpdateEvent();
+        //   this.checkboxUpdateEvent();
+        this.checkHandler = this.checkHandler.bind(this);
+        //this.onRemove = this.onRemove.bind(this); 
+        this.createEntryEvents();
         this.isDone();
     }
     TodoListItem.prototype.itemCustomEvent = function () {
@@ -78,16 +81,24 @@ var TodoListItem = (function () {
         var _this = this;
         this.inputElem.addEventListener('change', function () {
             _this.updateItemEvent.detail.elem = Object.assign({}, _this.elem, { title: _this.inputElem.value });
-            _this.parentContainer.dispatchEvent(_this.updateItemEvent);
+            _this.todoList.dispatchEvent(_this.updateItemEvent);
         });
     };
-    TodoListItem.prototype.checkboxUpdateEvent = function () {
-        var _this = this;
-        this.checkboxElem.addEventListener('change', function () {
-            _this.updateItemEvent.detail.elem = Object.assign({}, _this.elem, { done: _this.checkboxElem.checked });
-            _this.isDone();
-            _this.parentContainer.dispatchEvent(_this.updateItemEvent);
+    /*  checkboxUpdateEvent() {
+        this.checkboxElem.addEventListener('change', () => {
+          this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
+          this.isDone();
+          this.todoList.dispatchEvent(this.updateItemEvent);
         });
+      } */
+    TodoListItem.prototype.createEntryEvents = function () {
+        this.checkboxElem.addEventListener('change', this.checkHandler);
+    };
+    TodoListItem.prototype.checkHandler = function (e) {
+        var elem = e.target;
+        this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
+        this.isDone();
+        this.todoList.dispatchEvent(this.updateItemEvent);
     };
     TodoListItem.prototype.isDone = function () {
         if (this.checkboxElem.checked) {
@@ -100,7 +111,7 @@ var TodoListItem = (function () {
     TodoListItem.prototype.removeItemEvent = function () {
         var _this = this;
         this.deleteButton.addEventListener('click', function () {
-            _this.parentContainer.dispatchEvent(_this.deleteItemEvent);
+            _this.todoList.dispatchEvent(_this.deleteItemEvent);
         });
     };
     return TodoListItem;
@@ -109,11 +120,13 @@ exports.default = TodoListItem;
 
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "e60f38e74c9d61ddff9d840dd9ce10fb.svg";
 
 /***/ })
 ]);
-//# sourceMappingURL=2.bundle.js.map
+//# sourceMappingURL=0.bundle.js.map

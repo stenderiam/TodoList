@@ -1,6 +1,36 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// objects to store loaded and loading chunks
+/******/ 	var installedChunks = {
+/******/ 		1: 0
+/******/ 	};
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +56,55 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData === 0) {
+/******/ 			return new Promise(function(resolve) { resolve(); });
+/******/ 		}
+/******/
+/******/ 		// a Promise means "currently loading".
+/******/ 		if(installedChunkData) {
+/******/ 			return installedChunkData[2];
+/******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunkData[2] = promise;
+/******/
+/******/ 		// start chunk loading
+/******/ 		var head = document.getElementsByTagName('head')[0];
+/******/ 		var script = document.createElement('script');
+/******/ 		script.type = 'text/javascript';
+/******/ 		script.charset = 'utf-8';
+/******/ 		script.async = true;
+/******/ 		script.timeout = 120000;
+/******/
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".bundle.js";
+/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
+/******/ 		script.onerror = script.onload = onScriptComplete;
+/******/ 		function onScriptComplete() {
+/******/ 			// avoid mem leaks in IE.
+/******/ 			script.onerror = script.onload = null;
+/******/ 			clearTimeout(timeout);
+/******/ 			var chunk = installedChunks[chunkId];
+/******/ 			if(chunk !== 0) {
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
+/******/ 				installedChunks[chunkId] = undefined;
+/******/ 			}
+/******/ 		};
+/******/ 		head.appendChild(script);
+/******/
+/******/ 		return promise;
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -59,128 +138,16 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var deletesvg = __webpack_require__(1);
-var TodoListItem = (function () {
-    function TodoListItem(todoList, todoListContainer, elem) {
-        this.elem = elem;
-        this.todoList = todoList;
-        this.parentContainer = todoListContainer;
-        this.itemCustomEvent();
-        this.createEntry();
-        this.removeItemEvent();
-        this.inputUpdateEvent();
-        this.checkboxUpdateEvent();
-        this.isDone();
-    }
-    TodoListItem.prototype.itemCustomEvent = function () {
-        this.deleteItemEvent = new CustomEvent('deleteItem', {
-            detail: { id: this.elem.id },
-        });
-        this.updateItemEvent = new CustomEvent('updateItem', {
-            detail: {},
-        });
-    };
-    TodoListItem.prototype.createEntry = function () {
-        this.elemLi = this.createElemLi();
-        this.checkboxElem = this.createElemCheckbox(this.elem);
-        this.deleteButton = this.createElemDeleteButton();
-        this.inputElem = this.createElemInput(this.elem);
-        this.elemLi.appendChild(this.checkboxElem);
-        this.elemLi.appendChild(this.inputElem);
-        this.elemLi.appendChild(this.deleteButton);
-        this.todoList.appendChild(this.elemLi);
-    };
-    TodoListItem.prototype.createElemLi = function () {
-        var elemLiItem = document.createElement('li');
-        elemLiItem.className = 'list-item ';
-        return elemLiItem;
-    };
-    TodoListItem.prototype.createElemCheckbox = function (elem) {
-        var checkItemDiv = document.createElement('div');
-        checkItemDiv.className = 'item-input';
-        var elemCheckboxItem = document.createElement('input');
-        elemCheckboxItem.className = 'item-checkbox';
-        elemCheckboxItem.type = 'checkbox';
-        checkItemDiv.appendChild(elemCheckboxItem);
-        elemCheckboxItem.id = "todo" + elem.id;
-        elemCheckboxItem.checked = elem.done;
-        return elemCheckboxItem;
-    };
-    TodoListItem.prototype.createElemDeleteButton = function () {
-        var elemDeleteDiv = document.createElement('div');
-        elemDeleteDiv.className = 'item-buttonn';
-        var elemDeleteButton = document.createElement('button');
-        elemDeleteButton.type = 'button';
-        elemDeleteButton.className = 'item-delete';
-        elemDeleteButton.innerHTML = "<img src=\"" + deletesvg + "\" alt= \"delete icon\" > ";
-        elemDeleteDiv.appendChild(elemDeleteButton);
-        return elemDeleteButton;
-    };
-    TodoListItem.prototype.createElemInput = function (elem) {
-        var elemInputDiv = document.createElement('div');
-        elemInputDiv.className = 'item-text';
-        var elemInput = document.createElement('input');
-        elemInput.className = 'item-input--tag';
-        elemInput.type = 'text';
-        elemInput.value = elem.title;
-        return elemInput;
-    };
-    TodoListItem.prototype.deleteItem = function () {
-        this.elemLi.remove();
-    };
-    TodoListItem.prototype.inputUpdateEvent = function () {
-        var _this = this;
-        this.inputElem.addEventListener('change', function () {
-            _this.updateItemEvent.detail.elem = Object.assign({}, _this.elem, { title: _this.inputElem.value });
-            _this.parentContainer.dispatchEvent(_this.updateItemEvent);
-        });
-    };
-    TodoListItem.prototype.checkboxUpdateEvent = function () {
-        var _this = this;
-        this.checkboxElem.addEventListener('change', function () {
-            _this.updateItemEvent.detail.elem = Object.assign({}, _this.elem, { done: _this.checkboxElem.checked });
-            _this.isDone();
-            _this.parentContainer.dispatchEvent(_this.updateItemEvent);
-        });
-    };
-    TodoListItem.prototype.isDone = function () {
-        if (this.checkboxElem.checked) {
-            this.inputElem.classList.add('task-isDone');
-        }
-        else {
-            this.inputElem.classList.remove('task-isDone');
-        }
-    };
-    TodoListItem.prototype.removeItemEvent = function () {
-        var _this = this;
-        this.deleteButton.addEventListener('click', function () {
-            _this.parentContainer.dispatchEvent(_this.deleteItemEvent);
-        });
-    };
-    return TodoListItem;
-}());
-exports.default = TodoListItem;
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "e60f38e74c9d61ddff9d840dd9ce10fb.svg";
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports) {
 
 /*
@@ -262,7 +229,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -621,6 +588,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
+/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -643,7 +611,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var todolist_1 = __webpack_require__(6);
 var fab = __webpack_require__(7);
 var TodoBuilder = (function () {
-    // detail: (<CustomEvent>Event).detail;
     function TodoBuilder() {
         this.builderLayout();
         this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
@@ -683,7 +650,6 @@ var TodoBuilder = (function () {
     TodoBuilder.prototype.headlineEvent = function () {
         var _this = this;
         document.addEventListener('headlineChange', function (e) {
-            //   (<CustomEvent>Event).detail
             var elId = e.detail.todoLIST.id;
             var index = _this.ListStorage.findIndex(function (todoLIST) { return todoLIST.id === elId; });
             _this.ListStorage[index] = e.detail.todoLIST;
@@ -717,142 +683,6 @@ var TodoBuilder = (function () {
     return TodoBuilder;
 }());
 exports.default = TodoBuilder;
-/*
-interface ITodoBuilder {
-  // name: string;
-  // lessonCount?: number;
-  allTodo?: any;
-  ListStorage?: any;
-} */
-/*
-
-// export default class TodoBuilder implements ITodoBuilder {
-export default class TodoBuilder {
-  
-  let course : {name:string} = {
-      name: 'Components'
-  };
-  let course : Course = {
-    name: 'Components'
-};
-  interface SquareConfig {
-    color?: string;
-    width?: number;
-}
-
-interface SquareConfig {
-    color?: string;
-    width?: number;
-    [propName: string]: any;
-}
-
-class Greeter {
-    greeting: string;
-    constructor(message: string) {
-        this.greeting = message;
-    }
-    greet() {
-        return "Hello, " + this.greeting;
-    }
-}
-  interface NumberDictionary {
-    [index: string]: number;
-    length: number;    // ok, length is a number
-    name: string;      // error, the type of 'name' is not a subtype of the indexer
-}
-  
-
-
-
-
-  ListStorage: any;
-  allTodo: any;
-  boardHeader: string;
-  boardContainer: HTMLElement;
-  container: Element;
-  addLists: Element;
- 
-
-  constructor() {
-
-
-    this.builderLayout();
-    this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
-    this.allTodo = {};
-    this.initBuilder();
-  }
-
-  initBuilder() {
-    this.addTodoEvent();
-    this.showList();
-    this.deleteTodoList();
-    this.headlineEvent();
-  }
-
-  builderLayout() {
-    this.boardHeader = `
-                <div class="toolbar ">
-                  <div class="logo">
-                    ToDo List
-                  </div>
-                </div>
-                <div class="fab">
-                  <button class="fab-button" type="button"><img src="${fab}" alt="fab icon"></button>
-                </div>
-                <div class="content"></div>
-        `;
-    this.boardContainer = document.createElement('div');
-    this.boardContainer.className = 'app-content';
-    this.boardContainer.innerHTML = this.boardHeader;
-    this.container = document.querySelector('.board-wrapper');
-    this.container.appendChild(this.boardContainer);
-    this.addLists = document.querySelector('.fab');
-  }
-  addTodoEvent() {
-    this.addLists.addEventListener('click', (e) => {
-      e.preventDefault();
-      const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
-      const todoLIST = {
-        id: maxListId + 1,
-        todoListTitle: "",
-      };
-      this.ListStorage.push(todoLIST);
-      this.saveTodoList();
-      this.createTodoList(todoLIST);
-    });
-  }
-  headlineEvent() {
-    document.addEventListener('headlineChange', (e: CustomEvent) => {
-      const elId = e.detail.todoLIST.id;
-      const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
-      this.ListStorage[index] = e.detail.todoLIST;
-      this.saveTodoList();
-    });
-  }
-  saveTodoList() {
-    localStorage.setItem('allTodoStorage', JSON.stringify(this.ListStorage));
-  }
-  showList() {
-    this.ListStorage.forEach((elemLIST) => {
-      this.createTodoList(elemLIST);
-    });
-  }
-  createTodoList(todoLIST) {
-    const todoListObject = new TodoList(todoLIST);
-    this.allTodo[todoLIST.id] = todoListObject;
-  }
-  deleteTodoList() {
-    document.addEventListener('deleteLIST', (e) => {
-      const elId = e.detail.id;
-      const index = this.ListStorage.findIndex(elem => elem.id === elId);
-      this.ListStorage.splice(index, 1);
-      this.allTodo[elId].onDeleteList();
-      delete this.allTodo[elId];
-      this.saveTodoList();
-    });
-  }
-}
-*/ 
 
 
 /***/ }),
@@ -870,6 +700,15 @@ var TodoList = (function () {
         this.createLayout();
         this.initTodoList();
     }
+    TodoList.prototype.createLayout = function () {
+        this.createTodoContainer();
+        this.headline = this.createHeadline(this.todoLIST);
+        this.inputID = this.createInputToAdd();
+        this.buttonID = this.createInputToSubmit();
+        this.todoList = this.todoListContainer.querySelector('.todo-list');
+        this.removeList = this.createClearListBtn();
+        this.deleteTodo = this.createDeleteTodoBtn();
+    };
     TodoList.prototype.initTodoList = function () {
         this.showItem();
         this.addItemEvent();
@@ -881,21 +720,68 @@ var TodoList = (function () {
         this.deleteTodoList();
         this.headlineChange();
     };
-    TodoList.prototype.createLayout = function () {
-        this.layout = "\n        <form class=\"card-form\" autocomplete=\"off\">\n          <div class=\"headline\">\n            <input class=\"headline-title\" placeholder=\"Title\" value=\"" + this.todoLIST.todoListTitle + "\">\n          </div>\n          <ul class=\"todo-list\">\n          </ul>\n          <div class=\"new-item\">\n            <div class=\"item-input\">\n              <input class=\"item-submit\" type=\"submit\" alt=\"Submit\" value=\"+\" />\n            </div>\n            <div class=\"item-text\">\n              <input class=\"item-input--tag add-item\" placeholder=\"Add new todo\" value=\"\">\n              <span class=\"highlight\"></span>\n              <span class=\"bar\"></span>\n            </div>\n          </div>\n        </form>\n        <div class=\"list-button\">\n          <div class=\"clear-list\">\n            <button class=\"delete-button clear \" type=\"button\">clear</button>\n          </div>\n          <div class=\"delete-list\">\n            <button class=\"delete-button delete\" type=\"button\">delete</button>\n          </div>\n        </div>\n";
+    TodoList.prototype.createTodoContainer = function () {
+        this.layout = "<form class=\"card-form\" autocomplete=\"off\">\n          <div class=\"headline\">          \n          </div>\n          <ul class=\"todo-list\">\n          </ul>\n          <div class=\"new-item\">\n            <div class=\"item-input\">            \n            </div>\n            <div class=\"item-text\">    \n            </div>\n          </div>\n        </form>\n        <div class=\"list-button\">\n          <div class=\"clear-list\">           \n          </div>\n          <div class=\"delete-list\">       \n          </div>\n        </div>";
         this.todoListContainer = document.createElement('div');
         this.todoListContainer.className = 'card';
         this.todoListContainer.innerHTML = this.layout;
-        this.todoFormcontainer = document.querySelector('.content');
-        this.todoFormcontainer.appendChild(this.todoListContainer);
-        // querySelector returns Element
-        // use -> as HTMLInputElement
-        this.headline = this.todoListContainer.querySelector('.headline-title');
-        this.inputID = this.todoListContainer.querySelector('.add-item');
-        this.buttonID = this.todoListContainer.querySelector('.item-submit');
-        this.todoList = this.todoListContainer.querySelector('.todo-list');
-        this.removeList = this.todoListContainer.querySelector('.clear');
-        this.deleteTodo = this.todoListContainer.querySelector('.delete');
+        var todoFormcontainer = document.querySelector('.content');
+        todoFormcontainer.appendChild(this.todoListContainer);
+    };
+    TodoList.prototype.createHeadline = function (todoLIST) {
+        var headlineDiv = this.todoListContainer.querySelector('.headline');
+        var headlineInput = document.createElement('input');
+        headlineInput.className = 'headline-title';
+        headlineInput.type = 'text';
+        headlineInput.placeholder = "Title";
+        headlineInput.value = "" + todoLIST.todoListTitle;
+        headlineDiv.appendChild(headlineInput);
+        return headlineInput;
+    };
+    TodoList.prototype.createInputToAdd = function () {
+        var inputDiv = this.todoListContainer.querySelector('.item-text');
+        var inputToAdd = document.createElement('input');
+        var highlight = document.createElement('span');
+        var bar = document.createElement('span');
+        inputToAdd.className = 'item-input--tag add-item';
+        inputToAdd.type = 'text';
+        inputToAdd.value = "";
+        inputToAdd.placeholder = "Add new todo";
+        highlight.className = 'highlight';
+        bar.className = 'bar';
+        inputDiv.appendChild(inputToAdd);
+        inputDiv.appendChild(highlight);
+        inputDiv.appendChild(bar);
+        return inputToAdd;
+    };
+    TodoList.prototype.createInputToSubmit = function () {
+        var inputSubmitDiv = this.todoListContainer.querySelector('.item-input');
+        var inputToSubmit = document.createElement('input');
+        inputToSubmit.className = 'item-submit';
+        inputToSubmit.type = 'submit';
+        inputToSubmit.value = "+";
+        inputSubmitDiv.appendChild(inputToSubmit);
+        return inputToSubmit;
+    };
+    TodoList.prototype.createClearListBtn = function () {
+        var clearListDiv = this.todoListContainer.querySelector('.clear-list');
+        var clearListBtn = document.createElement('button');
+        var clearText = document.createTextNode('clear');
+        clearListBtn.className = 'delete-button clear';
+        clearListBtn.type = 'button';
+        clearListDiv.appendChild(clearListBtn);
+        clearListBtn.appendChild(clearText);
+        return clearListBtn;
+    };
+    TodoList.prototype.createDeleteTodoBtn = function () {
+        var deleteTodoDiv = this.todoListContainer.querySelector('.delete-list');
+        var deleteTodoBtn = document.createElement('button');
+        var clearText = document.createTextNode('delete');
+        deleteTodoBtn.className = 'delete-button delete';
+        deleteTodoBtn.type = 'button';
+        deleteTodoDiv.appendChild(deleteTodoBtn);
+        deleteTodoBtn.appendChild(clearText);
+        return deleteTodoBtn;
     };
     TodoList.prototype.todoCustomEvent = function () {
         this.deleteLISTEvent = new CustomEvent('deleteLIST', {
@@ -918,27 +804,22 @@ var TodoList = (function () {
                 id: maxId + 1,
             };
             _this.itemsStorage.push(todoItem);
-            _this.saveItem();
+            _this.saveItem(_this.todoLIST);
             _this.createItem(todoItem);
             _this.inputID.value = '';
         });
     };
-    TodoList.prototype.saveItem = function () {
-        localStorage.setItem("todoListItem" + this.todoLIST.id, JSON.stringify(this.itemsStorage));
+    TodoList.prototype.saveItem = function (todoLIST) {
+        localStorage.setItem("todoListItem" + todoLIST.id, JSON.stringify(this.itemsStorage));
     };
     TodoList.prototype.createItem = function (todoItem) {
         var _this = this;
-        Promise.resolve().then(function () { return __webpack_require__(0); }).then(function (module) {
+        __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 0)).then(function (module) {
             var TodoListItem = module.default;
-            var todoItemObject = new TodoListItem(_this.todoList, _this.todoListContainer, todoItem);
+            var todoItemObject = new TodoListItem(_this.todoList, todoItem);
             _this.todoItems[todoItem.id] = todoItemObject;
         });
     };
-    /* createItem(todoItem) {
-       const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
-       this.todoItems[todoItem.id] = todoItemObject;
-       this.showDeleteButton();
-     }*/
     TodoList.prototype.showItem = function () {
         var _this = this;
         this.itemsStorage.forEach(function (elem) {
@@ -947,22 +828,22 @@ var TodoList = (function () {
     };
     TodoList.prototype.deleteItem = function () {
         var _this = this;
-        this.todoListContainer.addEventListener('deleteItem', function (e) {
+        this.todoList.addEventListener('deleteItem', function (e) {
             var elId = e.detail.id;
             var index = _this.itemsStorage.findIndex(function (elem) { return elem.id === elId; });
             _this.itemsStorage.splice(index, 1);
             _this.todoItems[elId].deleteItem();
             delete _this.todoItems[elId];
-            _this.saveItem();
+            _this.saveItem(_this.todoLIST);
         });
     };
     TodoList.prototype.updateItem = function () {
         var _this = this;
-        this.todoListContainer.addEventListener('updateItem', function (e) {
+        this.todoList.addEventListener('updateItem', function (e) {
             var elId = e.detail.elem.id;
             var index = _this.itemsStorage.findIndex(function (elem) { return elem.id === elId; });
             _this.itemsStorage[index] = e.detail.elem;
-            _this.saveItem();
+            _this.saveItem(_this.todoLIST);
         });
     };
     TodoList.prototype.test = function () {
@@ -971,23 +852,23 @@ var TodoList = (function () {
             _this.inputID.classList.add('test');
         });
     };
-    TodoList.prototype.clearList = function () {
+    TodoList.prototype.clearList = function (todoLIST) {
         this.itemsStorage = [];
         this.todoItems = {};
-        localStorage.removeItem("todoListItem" + this.todoLIST.id);
+        localStorage.removeItem("todoListItem" + todoLIST.id);
         this.todoList.innerHTML = '';
     };
     TodoList.prototype.clearListOnClick = function () {
         var _this = this;
         this.removeList.addEventListener('click', function () {
             _this.removeList.classList.remove('button-visible');
-            _this.clearList();
+            _this.clearList(_this.todoLIST);
         });
     };
     TodoList.prototype.clearTodoOnClick = function () {
         var _this = this;
         this.deleteTodo.addEventListener('click', function () {
-            _this.clearList();
+            _this.clearList(_this.todoLIST);
         });
     };
     TodoList.prototype.headlineChange = function () {
@@ -1015,230 +896,6 @@ var TodoList = (function () {
     return TodoList;
 }());
 exports.default = TodoList;
-/*
-
-// import TodoListItem from './todolistitem.js';
-interface ItodoListType {
-  id: number,
-  todoListTitle?: string
-}
-interface ItodoItemType {
-  title?: string,
-  done?: boolean,
-  id: number
-}
-
-
-export default class TodoList {
-
-  todoItems: any;
-  itemsStorage: any;
-  todoLIST: ItodoListType;
-  layout: string;
-  todoListContainer: HTMLElement;
-  todoFormcontainer: Element;
-  headline: HTMLInputElement;
-  inputID: HTMLInputElement;
-  buttonID: Element;
-  todoList: Element;
-  removeList: Element;
-  deleteTodo: Element;
-  todoItem: ItodoItemType;
-  itemText: Element;
-  headlineDiv: Element;
-
-  deleteLISTEvent: CustomEvent;
-  headlineEvent: CustomEvent;
-
-  constructor(todoLIST) {
-    this.todoLIST = todoLIST;
-    this.todoItems = {};
-    this.itemsStorage = JSON.parse(localStorage.getItem(`todoListItem${this.todoLIST.id}`)) || [];
-    this.createLayout();
-    this.initTodoList();
-  }
-
-  initTodoList() {
-    this.showItem();
-    this.addItemEvent();
-    this.todoCustomEvent();
-    this.deleteItem();
-    this.updateItem();
-    this.clearListOnClick();
-    this.clearTodoOnClick();
-    this.deleteTodoList();
-    this.headlineChange();
-  }
-
-  createLayout() {
-    this.layout = `
-        <form class="card-form" autocomplete="off">
-          <div class="headline">
-          
-          </div>
-          <ul class="todo-list">
-          </ul>
-          <div class="new-item">
-            <div class="item-input">
-              <input class="item-submit" type="submit" alt="Submit" value="+" />
-            </div>
-            <div class="item-text">
-            
-            </div>
-          </div>
-        </form>
-        <div class="list-button">
-          <div class="clear-list">
-            <button class="delete-button clear " type="button">clear</button>
-          </div>
-          <div class="delete-list">
-            <button class="delete-button delete" type="button">delete</button>
-          </div>
-        </div>
-`;
-    this.todoListContainer = document.createElement('div');
-    this.todoListContainer.className = 'card';
-    this.todoListContainer.innerHTML = this.layout;
-    this.todoFormcontainer = document.querySelector('.content');
-    this.todoFormcontainer.appendChild(this.todoListContainer);
-    //  this.headline = this.todoListContainer.querySelector('.headline-title');
-
-    //  <input class="headline-title" placeholder="Title" value="${this.todoLIST.todoListTitle}">
-    let headline: HTMLInputElement = document.createElement('input');
-    headline.className = 'item-input--tag headline-title';
-    headline.type = 'text';
-    headline.placeholder = "Title";
-    headline.value = `${this.todoLIST.todoListTitle} `;
-    this.headlineDiv = this.todoListContainer.querySelector('.headline');
-    this.headlineDiv.appendChild(headline);
-    this.headline = headline;
-
-
-
-    this.itemText = this.todoListContainer.querySelector('.item-text');
-    let inputID: HTMLInputElement = document.createElement('input');
-    inputID.className = 'item-input--tag add-item';
-    inputID.type = 'text';
-    inputID.value = "";
-    inputID.placeholder = "Add new todo";
-    this.itemText.appendChild(inputID);
-    this.inputID = inputID;
-
-    let highlight: HTMLSpanElement = document.createElement('span');
-    highlight.className = 'highlight';
-    let bar: HTMLSpanElement = document.createElement('span');
-    bar.className = 'bar';
-    this.itemText.appendChild(highlight);
-    this.itemText.appendChild(bar);
-    this.buttonID = this.todoListContainer.querySelector('.item-submit');
-    this.todoList = this.todoListContainer.querySelector('.todo-list');
-    this.removeList = this.todoListContainer.querySelector('.clear');
-    this.deleteTodo = this.todoListContainer.querySelector('.delete');
-  }
-
-  todoCustomEvent() {
-    this.deleteLISTEvent = new CustomEvent('deleteLIST', {
-      detail: { id: this.todoLIST.id },
-    });
-    this.headlineEvent = new CustomEvent('headlineChange', {
-      detail: {},
-    });
-  }
-
-  addItemEvent() {
-    this.buttonID.addEventListener('click', (e) => {
-      e.preventDefault();
-      //  if (this.inputID.value.length === 0) return;
-      //  const title = this.inputID.value;
-      // const title = (<HTMLInputElement>this.todoListContainer.querySelector('.add-item')).value;
-      const title = this.inputID.value;
-      const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
-      const todoItem = {
-        title,
-        done: false,
-        id: maxId + 1,
-      };
-      this.itemsStorage.push(todoItem);
-      this.saveItem();
-      this.createItem(todoItem);
-      this.inputID.value = '';
-    });
-  }
-  saveItem() {
-    localStorage.setItem(`todoListItem${this.todoLIST.id} `, JSON.stringify(this.itemsStorage));
-  }
-  createItem(todoItem) {
-    import('./todolistitem.ts').then((module) => {
-  const TodoListItem = module.default;
-  const todoItemObject = new TodoListItem(this.todoList, this.todoListContainer, todoItem);
-  this.todoItems[todoItem.id] = todoItemObject;
-});
-  }
-
-showItem() {
-  this.itemsStorage.forEach((elem) => {
-    this.createItem(elem);
-  });
-}
-deleteItem() {
-  this.todoListContainer.addEventListener('deleteItem', (e: CustomEvent) => {
-    const elId = e.detail.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage.splice(index, 1);
-    this.todoItems[elId].deleteItem();
-    delete this.todoItems[elId];
-    this.saveItem();
-  });
-}
-updateItem() {
-  this.todoListContainer.addEventListener('updateItem', (e: CustomEvent) => {
-    const elId = e.detail.elem.id;
-    const index = this.itemsStorage.findIndex(elem => elem.id === elId);
-    this.itemsStorage[index] = e.detail.elem;
-    this.saveItem();
-  });
-}
-clearList() {
-  this.itemsStorage = [];
-  this.todoItems = {};
-  localStorage.removeItem(`todoListItem${this.todoLIST.id} `);
-  this.todoList.innerHTML = '';
-}
-clearListOnClick() {
-  this.removeList.addEventListener('click', () => {
-    this.removeList.classList.remove('button-visible');
-    this.clearList();
-  });
-}
-clearTodoOnClick() {
-  this.deleteTodo.addEventListener('click', () => {
-    this.clearList();
-  });
-}
-headlineChange() {
-  this.headline.addEventListener('change', () => {
-    this.headlineEvent.detail.todoLIST = Object.assign({}, this.todoLIST, { todoListTitle: this.headline.value });
-    document.dispatchEvent(this.headlineEvent);
-  });
-}
-deleteTodoList() {
-  this.deleteTodo.addEventListener('click', () => {
-    document.dispatchEvent(this.deleteLISTEvent);
-  });
-}
-onDeleteList() {
-  this.todoListContainer.remove();
-}
-showDeleteButton() {
-  if (this.itemsStorage.lenght !== null) {
-    this.removeList.classList.add('button-visible');
-  }
-  console.log(this.itemsStorage);
-}
-
-}
-
-*/ 
 
 
 /***/ }),
@@ -1262,7 +919,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(2)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1282,7 +939,7 @@ if(false) {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(1)(undefined);
 // imports
 
 
@@ -1402,7 +1059,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(2)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1422,7 +1079,7 @@ if(false) {
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(1)(undefined);
 // imports
 
 

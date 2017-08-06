@@ -6,7 +6,7 @@ export default class TodoListItem {
 
   elem: ItodoItemType;
   todoList: HTMLUListElement;
-  parentContainer: HTMLElement;
+  //  parentContainer: HTMLElement;
   elemLi: HTMLLIElement;
   checkboxElem: HTMLInputElement;
   inputElem: HTMLInputElement;
@@ -14,15 +14,18 @@ export default class TodoListItem {
   deleteItemEvent: CustomEvent;
   updateItemEvent: CustomEvent;
 
-  constructor(todoList: HTMLUListElement, todoListContainer: HTMLElement, elem: ItodoItemType) {
+  constructor(todoList: HTMLUListElement, elem: ItodoItemType) {
     this.elem = elem;
     this.todoList = todoList;
-    this.parentContainer = todoListContainer;
+    //  this.parentContainer = todoListContainer;
     this.itemCustomEvent();
     this.createEntry();
     this.removeItemEvent();
     this.inputUpdateEvent();
-    this.checkboxUpdateEvent();
+    //   this.checkboxUpdateEvent();
+    this.checkHandler = this.checkHandler.bind(this);
+    //this.onRemove = this.onRemove.bind(this); 
+    this.createEntryEvents();
     this.isDone();
   }
   itemCustomEvent() {
@@ -88,15 +91,26 @@ export default class TodoListItem {
   inputUpdateEvent() {
     this.inputElem.addEventListener('change', () => {
       this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { title: this.inputElem.value });
-      this.parentContainer.dispatchEvent(this.updateItemEvent);
+      this.todoList.dispatchEvent(this.updateItemEvent);
     });
   }
-  checkboxUpdateEvent() {
-    this.checkboxElem.addEventListener('change', () => {
-      this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
-      this.isDone();
-      this.parentContainer.dispatchEvent(this.updateItemEvent);
-    });
+  /*  checkboxUpdateEvent() {
+      this.checkboxElem.addEventListener('change', () => {
+        this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
+        this.isDone();
+        this.todoList.dispatchEvent(this.updateItemEvent);
+      });
+    } */
+
+
+  createEntryEvents() {
+    this.checkboxElem.addEventListener('change', this.checkHandler);
+  }
+  checkHandler(e) {
+    const elem = e.target;
+    this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
+    this.isDone();
+    this.todoList.dispatchEvent(this.updateItemEvent);
   }
 
   isDone() {
@@ -108,7 +122,7 @@ export default class TodoListItem {
   }
   removeItemEvent() {
     this.deleteButton.addEventListener('click', () => {
-      this.parentContainer.dispatchEvent(this.deleteItemEvent);
+      this.todoList.dispatchEvent(this.deleteItemEvent);
     });
   }
 }
