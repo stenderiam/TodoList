@@ -795,7 +795,8 @@ var TodoList = (function () {
         var _this = this;
         this.buttonID.addEventListener('click', function (e) {
             e.preventDefault();
-            //  if (this.inputID.value.length === 0) return;
+            if (_this.inputID.value.length === 0)
+                return;
             var title = _this.inputID.value;
             var maxId = (_this.itemsStorage.length > 0 ? Math.max.apply(Math, _this.itemsStorage.map(function (elem) { return elem.id; })) : 0);
             var todoItem = {

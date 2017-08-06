@@ -147,7 +147,7 @@ export default class TodoList {
   addItemEvent() {
     this.buttonID.addEventListener('click', (e) => {
       e.preventDefault();
-      //  if (this.inputID.value.length === 0) return;
+      if (this.inputID.value.length === 0) return;
       const title = this.inputID.value;
       const maxId = (this.itemsStorage.length > 0 ? Math.max(...this.itemsStorage.map(elem => elem.id)) : 0);
       const todoItem: ItodoItemType = {
@@ -226,6 +226,7 @@ export default class TodoList {
       document.dispatchEvent(this.headlineEvent);
     });
   }
+
   deleteTodoList() {
     this.deleteTodo.addEventListener('click', () => {
       document.dispatchEvent(this.deleteLISTEvent);

@@ -21,9 +21,10 @@ export default class TodoListItem {
     this.itemCustomEvent();
     this.createEntry();
     this.removeItemEvent();
-    this.inputUpdateEvent();
+    //  this.inputUpdateEvent();
     //   this.checkboxUpdateEvent();
     this.checkHandler = this.checkHandler.bind(this);
+    this.inputHandler = this.inputHandler.bind(this);
     //this.onRemove = this.onRemove.bind(this); 
     this.createEntryEvents();
     this.isDone();
@@ -88,28 +89,18 @@ export default class TodoListItem {
   deleteItem() {
     this.elemLi.remove();
   }
-  inputUpdateEvent() {
-    this.inputElem.addEventListener('change', () => {
-      this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { title: this.inputElem.value });
-      this.todoList.dispatchEvent(this.updateItemEvent);
-    });
-  }
-  /*  checkboxUpdateEvent() {
-      this.checkboxElem.addEventListener('change', () => {
-        this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
-        this.isDone();
-        this.todoList.dispatchEvent(this.updateItemEvent);
-      });
-    } */
-
 
   createEntryEvents() {
     this.checkboxElem.addEventListener('change', this.checkHandler);
+    this.inputElem.addEventListener('change', this.inputHandler);
   }
   checkHandler(e) {
-    const elem = e.target;
     this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
     this.isDone();
+    this.todoList.dispatchEvent(this.updateItemEvent);
+  }
+  inputHandler(e) {
+    this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { title: this.inputElem.value });
     this.todoList.dispatchEvent(this.updateItemEvent);
   }
 

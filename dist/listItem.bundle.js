@@ -79,9 +79,10 @@ var TodoListItem = (function () {
         this.itemCustomEvent();
         this.createEntry();
         this.removeItemEvent();
-        this.inputUpdateEvent();
+        //  this.inputUpdateEvent();
         //   this.checkboxUpdateEvent();
         this.checkHandler = this.checkHandler.bind(this);
+        this.inputHandler = this.inputHandler.bind(this);
         //this.onRemove = this.onRemove.bind(this); 
         this.createEntryEvents();
         this.isDone();
@@ -142,27 +143,17 @@ var TodoListItem = (function () {
     TodoListItem.prototype.deleteItem = function () {
         this.elemLi.remove();
     };
-    TodoListItem.prototype.inputUpdateEvent = function () {
-        var _this = this;
-        this.inputElem.addEventListener('change', function () {
-            _this.updateItemEvent.detail.elem = Object.assign({}, _this.elem, { title: _this.inputElem.value });
-            _this.todoList.dispatchEvent(_this.updateItemEvent);
-        });
-    };
-    /*  checkboxUpdateEvent() {
-        this.checkboxElem.addEventListener('change', () => {
-          this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
-          this.isDone();
-          this.todoList.dispatchEvent(this.updateItemEvent);
-        });
-      } */
     TodoListItem.prototype.createEntryEvents = function () {
         this.checkboxElem.addEventListener('change', this.checkHandler);
+        this.inputElem.addEventListener('change', this.inputHandler);
     };
     TodoListItem.prototype.checkHandler = function (e) {
-        var elem = e.target;
         this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { done: this.checkboxElem.checked });
         this.isDone();
+        this.todoList.dispatchEvent(this.updateItemEvent);
+    };
+    TodoListItem.prototype.inputHandler = function (e) {
+        this.updateItemEvent.detail.elem = Object.assign({}, this.elem, { title: this.inputElem.value });
         this.todoList.dispatchEvent(this.updateItemEvent);
     };
     TodoListItem.prototype.isDone = function () {
