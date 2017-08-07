@@ -41,7 +41,7 @@ body {
 .card {
     box-shadow: $shadow-2dp;
     background-color: white;
-    margin: 16px 8px 0 8px;
+    margin: 8px 8px 0 8px;
     width: calc(100vw - 16px);
 }
 
@@ -210,13 +210,15 @@ input:focus~.bar:after {
 button {
     outline: none;
     &.fab-button {
+        display: flex;
+        justify-content: center;
         width: 56px;
         height: 56px;
         border-radius: 180px;
         background: $secondary-color;
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 16px;
+        right: 16px;
         cursor: pointer;
         overflow: hidden;
         box-shadow: $shadow-6dp;
@@ -247,12 +249,12 @@ button {
 
 .clear-list,
 .delete-list {
-    padding-right: 8px;
-    margin: 32px 8px 8px 8px;
+    margin: 16px 8px 8px 8px;
 }
 
 .list-button {
     display: flex;
+    justify-content: flex-end;
 }
 
 .task-isDone {

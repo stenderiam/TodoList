@@ -19,8 +19,7 @@ export default class TodoListItem {
     this.itemCustomEvent();
     this.createEntry();
     this.removeItemEvent();
-    this.checkHandler = this.checkHandler.bind(this);
-    this.inputHandler = this.inputHandler.bind(this);
+    this.initHandlers();
     this.initUpdateEvents();
     this.isDone();
   }
@@ -84,7 +83,10 @@ export default class TodoListItem {
   deleteItem() {
     this.elemLi.remove();
   }
-
+  initHandlers() {
+    this.checkHandler = this.checkHandler.bind(this);
+    this.inputHandler = this.inputHandler.bind(this);
+  }
   initUpdateEvents() {
     this.checkboxElem.addEventListener('change', this.checkHandler);
     this.inputElem.addEventListener('change', this.inputHandler);

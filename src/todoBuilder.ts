@@ -1,34 +1,33 @@
 
 import TodoList from './todolist';
+import ItodoListType from './ItodoListType';
 let fab = require('../icons/fab.svg');
 
-import ItodoListType from './ItodoListType';
 
 
 export default class TodoBuilder {
-
-  ListStorage: any;
-  allTodo: any;
+  ListStorage: Array<ItodoListType>;
+  allTodo: Object;
   boardHeader: string;
   boardContainer: HTMLElement;
-  container: Element;
-  addLists: Element;
+  addTodoList: Element;
   todoLIST: ItodoListType;
+
   constructor() {
-    this.builderLayout();
     this.ListStorage = JSON.parse(localStorage.getItem('allTodoStorage')) || [];
     this.allTodo = {};
+    this.buildLayout();
     this.initBuilder();
   }
 
   initBuilder() {
-    this.addTodoEvent();
-    this.showList();
-    this.deleteTodoList();
-    this.headlineEvent();
+    this.addTodoListEvent();
+    this.showList(this.ListStorage);
+    this.bindHandler();
+    this.initCustomEvent();
   }
 
-  builderLayout() {
+  buildLayout() {
     this.boardHeader = `
                 <div class="toolbar ">
                   <div class="logo">
@@ -40,16 +39,12 @@ export default class TodoBuilder {
                 </div>
                 <div class="content"></div>
         `;
-    this.boardContainer = document.createElement('div');
-    this.boardContainer.className = 'app-content';
-    this.boardContainer.innerHTML = this.boardHeader;
-    this.container = document.querySelector('.board-wrapper');
-    this.container.appendChild(this.boardContainer);
-    this.container.appendChild(this.boardContainer);
-    this.addLists = document.querySelector('.fab');
+    const container: Element = document.querySelector('.board-wrapper');
+    container.insertAdjacentHTML('afterbegin', this.boardHeader);
+    this.addTodoList = document.querySelector('.fab');
   }
-  addTodoEvent() {
-    this.addLists.addEventListener('click', (e) => {
+  addTodoListEvent() {
+    this.addTodoList.addEventListener('click', (e) => {
       e.preventDefault();
       const maxListId = (this.ListStorage.length > 0 ? Math.max(...this.ListStorage.map(elem => elem.id)) : 0);
       const todoLIST: ItodoListType = {
@@ -57,23 +52,16 @@ export default class TodoBuilder {
         todoListTitle: '',
       };
       this.ListStorage.push(todoLIST);
-      this.saveTodoList();
+      this.saveTodoList(this.ListStorage);
       this.createTodoList(todoLIST);
     });
   }
-  headlineEvent() {
-    document.addEventListener('headlineChange', (e: CustomEvent) => {
-      const elId = e.detail.todoLIST.id;
-      const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
-      this.ListStorage[index] = e.detail.todoLIST;
-      this.saveTodoList();
-    });
+
+  saveTodoList(ListStorage: any): any {
+    return localStorage.setItem('allTodoStorage', JSON.stringify(ListStorage));
   }
-  saveTodoList() {
-    localStorage.setItem('allTodoStorage', JSON.stringify(this.ListStorage));
-  }
-  showList() {
-    this.ListStorage.forEach((elemLIST) => {
+  showList(ListStorage: any): any {
+    return ListStorage.forEach((elemLIST) => {
       this.createTodoList(elemLIST);
     });
   }
@@ -81,14 +69,28 @@ export default class TodoBuilder {
     const todoListObject = new TodoList(todoLIST);
     this.allTodo[todoLIST.id] = todoListObject;
   }
-  deleteTodoList() {
-    document.addEventListener('deleteLIST', (e: CustomEvent) => {
-      const elId = e.detail.id;
-      const index = this.ListStorage.findIndex(elem => elem.id === elId);
-      this.ListStorage.splice(index, 1);
-      this.allTodo[elId].onDeleteList();
-      delete this.allTodo[elId];
-      this.saveTodoList();
-    });
+
+  initCustomEvent() {
+    document.addEventListener('deleteLIST', this.deleteTodoListHandler);
+    document.addEventListener('headlineChange', this.headlineHandler);
+  }
+
+  headlineHandler(e: CustomEvent) {
+    const elId = e.detail.todoLIST.id;
+    const index = this.ListStorage.findIndex(todoLIST => todoLIST.id === elId);
+    this.ListStorage[index] = e.detail.todoLIST;
+    this.saveTodoList(this.ListStorage);
+  }
+  deleteTodoListHandler(e: CustomEvent) {
+    const elId = e.detail.id;
+    const index = this.ListStorage.findIndex(elem => elem.id === elId);
+    this.ListStorage.splice(index, 1);
+    this.allTodo[elId].onDeleteList();
+    delete this.allTodo[elId];
+    this.saveTodoList(this.ListStorage);
+  }
+  bindHandler() {
+    this.headlineHandler = this.headlineHandler.bind(this);
+    this.deleteTodoListHandler = this.deleteTodoListHandler.bind(this);
   }
 }
